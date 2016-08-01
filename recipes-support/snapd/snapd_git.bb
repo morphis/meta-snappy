@@ -80,6 +80,12 @@ do_install() {
 	install -d ${D}${libdir}/snapd
 	install -d ${D}${bindir}
 	install -d ${D}${systemd_unitdir}/system
+	install -d ${D}/var/lib/snapd
+	install -d ${D}/var/lib/snapd/snaps
+	install -d ${D}/var/lib/snapd/lib/gl
+	install -d ${D}/var/lib/snapd/desktop
+	install -d ${D}/var/lib/snapd/environment
+	install -d ${D}/var/snap
 
 	install -m 0644 ${S}/debian/snapd.refresh.timer ${D}${systemd_unitdir}/system
 	install -m 0644 ${S}/debian/snapd.refresh.service ${D}${systemd_unitdir}/system
@@ -92,8 +98,4 @@ do_install() {
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
-FILES_${PN} += "${systemd_unitdir}/system/"
-
-pkg_postinst_${PN}() {
-	install -d ${localstatedir}/lib/snapd
-}
+FILES_${PN} += "${systemd_unitdir}/system/ /var/lib/snapd /var/snap"
