@@ -10,6 +10,7 @@ IMAGE_INSTALL = " \
     ca-certificates \
     kernel-module-squashfs \
     bash \
+    rpm \
 "
 
 IMAGE_LINGUAS = " "
