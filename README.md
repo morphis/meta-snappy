@@ -8,13 +8,7 @@ This meta layer mainly contains the following components which are
 required for Snappy:
 
  * snapd
-
-# Dependencies
-
-This layer depens on:
-
-URI: https://github.com/madisongh/meta-golang/
-branches: fido, jethro, krogoth, master
+ * snap-confine
 
 # Contributions
 
