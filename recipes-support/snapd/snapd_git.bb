@@ -14,18 +14,18 @@ SNAPD_PKG="github.com/snapcore/snapd"
 
 PV = "2.0.10"
 DEPENDS = " \
-    go-cross \
-    go-crypt \
-    go-check-v1 \
+	go-cross \
+	go-crypt \
+	go-check-v1 \
 	go-context \
-    go-go-flags \
-    go-mux \
-    go-gettext \
-    go-goconfigparser \
-    go-liner \
+	go-go-flags \
+	go-mux \
+	go-gettext \
+	go-goconfigparser \
+	go-liner \
 	go-pty \
-    go-pb \
-    go-systemd \
+	go-pb \
+	go-systemd \
 	go-uboot \
 	go-yaml-v2 \
 	go-macaroon-v2 \
