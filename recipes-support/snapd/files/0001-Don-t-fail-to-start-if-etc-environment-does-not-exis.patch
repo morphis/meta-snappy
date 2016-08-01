@@ -1,0 +1,27 @@
+From 8abc656eedf0234868495092835086f19f4c1e6d Mon Sep 17 00:00:00 2001
+From: Simon Fels <simon.fels@canonical.com>
+Date: Mon, 1 Aug 2016 12:08:13 +0200
+Subject: [PATCH] Don't fail to start if /etc/environment does not exist
+
+On some systems /etc/environment is not available by default and
+should be prevent snapd from starting.
+---
+ debian/snapd.service | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/debian/snapd.service b/debian/snapd.service
+index 83251d9..ba69641 100644
+--- a/debian/snapd.service
++++ b/debian/snapd.service
+@@ -7,7 +7,7 @@ Requires=snapd.socket
+ 
+ [Service]
+ ExecStart=/usr/lib/snapd/snapd
+-EnvironmentFile=/etc/environment
++EnvironmentFile=-/etc/environment
+ Restart=always
+ 
+ [Install]
+-- 
+2.7.4
+

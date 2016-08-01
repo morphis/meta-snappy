@@ -3,7 +3,10 @@ HOMEPAGE = "https://www.snapcraft.io"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "git://github.com/snapcore/snapd.git;protocol=https;branch=master"
+SRC_URI = " \
+  git://github.com/snapcore/snapd.git;protocol=https;branch=master \
+  file://0001-Don-t-fail-to-start-if-etc-environment-does-not-exis.patch \
+"
 # Matches the 2.0.10 tag
 SRCREV = "0a4c5419c1134768570addd13ded7fa49a5a4f6d"
 
