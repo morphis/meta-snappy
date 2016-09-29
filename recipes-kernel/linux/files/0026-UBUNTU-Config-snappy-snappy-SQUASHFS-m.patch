@@ -1,0 +1,29 @@
+From e81485eccd048b06849c4b9c4bb40bb24efbfba3 Mon Sep 17 00:00:00 2001
+From: Paolo Pisati <paolo.pisati@canonical.com>
+Date: Tue, 26 Apr 2016 11:04:28 +0200
+Subject: [PATCH 26/33] UBUNTU: [Config] snappy/snappy: SQUASHFS=m
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ kernel/configs/snappy/snappy.config | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/kernel/configs/snappy/snappy.config b/kernel/configs/snappy/snappy.config
+index 687aaf6..73dbf1e 100644
+--- a/kernel/configs/snappy/snappy.config
++++ b/kernel/configs/snappy/snappy.config
+@@ -16,3 +16,11 @@ CONFIG_AUTOFS4_FS=y
+ CONFIG_CONFIGFS_FS=y
+ CONFIG_KEYS=y
+ CONFIG_ENCRYPTED_KEYS=y
++CONFIG_SQUASHFS=m
++CONFIG_SQUASHFS_FILE_DIRECT=y
++CONFIG_SQUASHFS_DECOMP_MULTI_PERCPU=y
++CONFIG_SQUASHFS_XATTR=y
++CONFIG_SQUASHFS_ZLIB=y
++CONFIG_SQUASHFS_LZ4=y
++CONFIG_SQUASHFS_LZO=y
++CONFIG_SQUASHFS_XZ=y
+-- 
+2.7.4
+

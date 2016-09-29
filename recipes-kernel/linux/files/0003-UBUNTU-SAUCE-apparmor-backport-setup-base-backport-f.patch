@@ -1,0 +1,93 @@
+From 09a35cd7a594bf69561d11af7cf978cd3b89edec Mon Sep 17 00:00:00 2001
+From: John Johansen <john.johansen@canonical.com>
+Date: Tue, 22 Apr 2014 01:24:03 -0700
+Subject: [PATCH 03/33] UBUNTU: SAUCE: apparmor: backport setup base backport
+ files
+
+Setup up the empty backport files, so that new commits can be easily
+introduced.
+
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+(cherry picked from commit 0eb09b495e6f2d4f05d4a7a07ab6f0e7dbd57eaa)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+
+Conflicts:
+	security/apparmor/Makefile
+
+(cherry picked from commit c55060677fc8af9548876ea43c65ca0d55dc6b53)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ security/apparmor/Makefile           |  2 +-
+ security/apparmor/backport.c         | 19 +++++++++++++++++++
+ security/apparmor/include/backport.h | 20 ++++++++++++++++++++
+ 3 files changed, 40 insertions(+), 1 deletion(-)
+ create mode 100644 security/apparmor/backport.c
+ create mode 100644 security/apparmor/include/backport.h
+
+diff --git a/security/apparmor/Makefile b/security/apparmor/Makefile
+index 69ce26e..ca1d9ef 100644
+--- a/security/apparmor/Makefile
++++ b/security/apparmor/Makefile
+@@ -4,7 +4,7 @@ obj-$(CONFIG_SECURITY_APPARMOR) += apparmor.o
+ 
+ apparmor-y := apparmorfs.o audit.o capability.o context.o ipc.o lib.o match.o \
+               path.o domain.o policy.o policy_unpack.o procattr.o lsm.o \
+-              resource.o sid.o file.o label.o mount.o net.o af_unix.o
++              resource.o sid.o file.o label.o mount.o net.o af_unix.o backport.o
+ apparmor-$(CONFIG_SECURITY_APPARMOR_HASH) += crypto.o
+ 
+ clean-files := capability_names.h rlim_names.h net_names.h
+diff --git a/security/apparmor/backport.c b/security/apparmor/backport.c
+new file mode 100644
+index 0000000..e47da0f
+--- /dev/null
++++ b/security/apparmor/backport.c
+@@ -0,0 +1,19 @@
++/*
++ * AppArmor security module
++ *
++ * This file contains AppArmor file mediation function definitions.
++ *
++ * Copyright 2014 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation, version 2 of the
++ * License.
++ *
++ *
++ * This is a file of helper fns backported from newer kernels to support
++ * backporting of apparmor to older kernels. Fns prefixed with code they
++ * are copied of modified from
++ */
++
++#include "include/backport.h"
+diff --git a/security/apparmor/include/backport.h b/security/apparmor/include/backport.h
+new file mode 100644
+index 0000000..ec9ba85
+--- /dev/null
++++ b/security/apparmor/include/backport.h
+@@ -0,0 +1,20 @@
++/*
++ * AppArmor security module
++ *
++ * This file contains AppArmor file mediation function definitions.
++ *
++ * Copyright 2014 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation, version 2 of the
++ * License.
++ *
++ *
++ * This is a file of helper macros, defines for backporting newer versions
++ * of apparmor to older kernels
++ */
++#ifndef __AA_BACKPORT_H
++#define __AA_BACKPORT_H
++
++#endif /* __AA_BACKPORT_H */
+-- 
+2.7.4
+

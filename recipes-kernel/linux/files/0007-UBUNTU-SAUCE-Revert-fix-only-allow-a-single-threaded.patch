@@ -1,0 +1,48 @@
+From 0fd01410406a335e6dcc4b0bfb66a6334e4a0f41 Mon Sep 17 00:00:00 2001
+From: John Johansen <john.johansen@canonical.com>
+Date: Mon, 6 Oct 2014 11:16:42 -0700
+Subject: [PATCH 07/33] UBUNTU: SAUCE: Revert: fix: only allow a single
+ threaded process to ...
+
+Revert the enforcement of only a single thread tasks using change_onexec.
+While this change prevents applications from using change_onexec in
+a potentially broken way (it can be done right but the application code
+using it needs to be carefully audited), it does restrict historically
+allowed behavior. Specifically this change is causes docker to fail, and
+needs to be reverted until it can be selectively applied with policy
+changes.
+
+BugLink: http://bugs.launchpad.net/bugs/1371310
+
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Acked-by: Stefan Bader <stefan.bader@canonical.com>
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+(cherry picked from commit f53954851e448db78eef80fbb553c4be03833521)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+(cherry picked from commit 4b0f6c4f99be92f6528590e8cdc1e31c452b95a1)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ security/apparmor/domain.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index 3953b31..1d07506 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -822,13 +822,6 @@ int aa_change_profile(const char *ns_name, const char *hname, bool onexec,
+ 	if (error)
+ 		goto audit;
+ 
+-	if (onexec && !current_is_single_threaded()) {
+-		info = "not a single threaded task";
+-		error = -EACCES;
+-		goto audit;
+-	}
+-
+-
+ 	if (permtest)
+ 		goto audit;
+ 
+-- 
+2.7.4
+

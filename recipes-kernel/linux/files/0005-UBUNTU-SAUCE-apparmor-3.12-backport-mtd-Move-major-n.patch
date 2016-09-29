@@ -1,0 +1,30 @@
+From d41f398bda1a8f6b55b8d98ab30fd496684a3e02 Mon Sep 17 00:00:00 2001
+From: John Johansen <john.johansen@canonical.com>
+Date: Mon, 21 Apr 2014 13:02:58 -0700
+Subject: [PATCH 05/33] UBUNTU: SAUCE: apparmor: 3.12 backport mtd: Move major
+ number f83c3838
+
+Add support for changes from commit f83c3838b9146b891d0405d3a83660e8f6aed02f
+
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+(cherry picked from commit 74ec323885860bf76492eebe843a8455e6be36ac)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ security/apparmor/apparmorfs.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
+index f86f56e..63dffc1 100644
+--- a/security/apparmor/apparmorfs.c
++++ b/security/apparmor/apparmorfs.c
+@@ -22,7 +22,6 @@
+ #include <linux/namei.h>
+ #include <linux/capability.h>
+ #include <linux/rcupdate.h>
+-#include <uapi/linux/major.h>
+ 
+ #include "include/apparmor.h"
+ #include "include/apparmorfs.h"
+-- 
+2.7.4
+

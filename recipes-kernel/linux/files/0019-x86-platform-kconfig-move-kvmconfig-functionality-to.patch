@@ -1,0 +1,86 @@
+From d421d8570f8b96d1d0642b0008f7d202eb19c171 Mon Sep 17 00:00:00 2001
+From: Josh Triplett <josh@joshtriplett.org>
+Date: Wed, 6 Aug 2014 15:21:00 -0700
+Subject: [PATCH 19/33] x86, platform, kconfig: move kvmconfig functionality to
+ a helper
+
+The new mergeconfig helper makes it easier to add other partial
+configurations similar to kvmconfig.  Architecture-independent portions
+of those partial configurations should go in
+kernel/configs/${name}.config, and architecture-dependent portions
+should go in arch/${arch}/configs/${name}.config.
+
+Based on a patch by Luis R. Rodriguez <mcgrof@suse.com>.
+Originally-Signed-off-by: Luis R. Rodriguez <mcgrof@suse.com>
+
+Modified to make the helper name more general than just virtualization,
+support architecture-dependent and architecture-independent partial
+configurations, move the helper and kvmconfig to
+scripts/kconfig/Makefile, and factor out more of the common file path.
+
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+(cherry picked from commit 3aaefce10351fecab348f5e06857f44cafc61a62)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ arch/x86/Makefile        |  7 -------
+ scripts/kconfig/Makefile | 14 ++++++++++++++
+ 2 files changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 1ed7391..412189d 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -226,12 +226,6 @@ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+ 	$(Q)$(MAKE) $(clean)=arch/x86/tools
+ 
+-PHONY += kvmconfig
+-kvmconfig:
+-	$(if $(wildcard $(objtree)/.config),, $(error You need an existing .config for this target))
+-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m -O $(objtree) $(objtree)/.config $(srctree)/arch/x86/configs/kvm_guest.config
+-	$(Q)yes "" | $(MAKE) -f $(srctree)/Makefile oldconfig
+-
+ define archhelp
+   echo  '* bzImage      - Compressed kernel image (arch/x86/boot/bzImage)'
+   echo  '  install      - Install kernel using'
+@@ -245,5 +239,4 @@ define archhelp
+   echo  '                  bzdisk/fdimage*/isoimage also accept:'
+   echo  '                  FDARGS="..."  arguments for the booted kernel'
+   echo  '                  FDINITRD=file initrd for the booted kernel'
+-  echo  '  kvmconfig	- Enable additional options for guest kernel support'
+ endef
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 37cceb3..1a8e725 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -104,6 +104,19 @@ endif
+ %_defconfig: $(obj)/conf
+ 	$(Q)$< --defconfig=arch/$(SRCARCH)/configs/$@ $(Kconfig)
+ 
++configfiles=$(wildcard $(srctree)/kernel/configs/$(1).config $(srctree)/arch/$(SRCARCH)/configs/$(1).config)
++
++define mergeconfig
++$(if $(wildcard $(objtree)/.config),, $(error You need an existing .config for this target))
++$(if $(call configfiles,$(1)),, $(error No configuration exists for this target on this architecture))
++$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m -O $(objtree) $(objtree)/.config $(call configfiles,$(1))
++$(Q)yes "" | $(MAKE) -f $(srctree)/Makefile oldconfig
++endef
++
++PHONY += kvmconfig
++kvmconfig:
++	$(call mergeconfig,kvm_guest)
++
+ # Help text used by make help
+ help:
+ 	@echo  '  config	  - Update current config utilising a line-oriented program'
+@@ -124,6 +137,7 @@ help:
+ 	@echo  '  randconfig	  - New config with random answer to all options'
+ 	@echo  '  listnewconfig   - List new options'
+ 	@echo  '  olddefconfig	  - Same as silentoldconfig but sets new symbols to their default value'
++	@echo  '  kvmconfig	  - Enable additional options for guest kernel support'
+ 
+ # lxdialog stuff
+ check-lxdialog  := $(srctree)/$(src)/lxdialog/check-lxdialog.sh
+-- 
+2.7.4
+

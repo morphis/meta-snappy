@@ -1,0 +1,44 @@
+From 22a4cb7da54a425f01aaf762a68c83e5dd02df21 Mon Sep 17 00:00:00 2001
+From: Antonio Borneo <borneo.antonio@gmail.com>
+Date: Sun, 13 Apr 2014 16:26:08 +0800
+Subject: [PATCH 18/33] x86/platform: Fix "make O=dir kvmconfig"
+
+Running:
+
+	make O=dir x86_64_defconfig
+	make O=dir kvmconfig
+
+the second command dirties the source tree with file ".config",
+symlink "source" and objects in folder "scripts".
+
+Fixed by using properly prefixed paths in the arch Makefile.
+
+Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Pekka Enberg <penberg@kernel.org>
+Link: http://lkml.kernel.org/r/1397377568-8375-1-git-send-email-borneo.antonio@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+(cherry picked from commit f96364041ccda63ff4bed96fd06b267d8d841dc0)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ arch/x86/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 6218fcb..1ed7391 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -229,8 +229,8 @@ archclean:
+ PHONY += kvmconfig
+ kvmconfig:
+ 	$(if $(wildcard $(objtree)/.config),, $(error You need an existing .config for this target))
+-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m -O $(objtree) $(objtree)/.config arch/x86/configs/kvm_guest.config
+-	$(Q)yes "" | $(MAKE) oldconfig
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m -O $(objtree) $(objtree)/.config $(srctree)/arch/x86/configs/kvm_guest.config
++	$(Q)yes "" | $(MAKE) -f $(srctree)/Makefile oldconfig
+ 
+ define archhelp
+   echo  '* bzImage      - Compressed kernel image (arch/x86/boot/bzImage)'
+-- 
+2.7.4
+

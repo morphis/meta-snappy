@@ -1,0 +1,38 @@
+From 52452bcc0846f6a6a8a61b95e8d226483c53c433 Mon Sep 17 00:00:00 2001
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date: Fri, 13 Mar 2015 15:21:40 +0900
+Subject: [PATCH 23/33] kbuild: mergeconfig: remove redundant $(objtree)
+
+Kbuild always runs in $(objtree).  Actually, $(objtree) is always
+set to "." by the top-level Makefile.
+
+We can omit "-O $(objtree)" and "$(objtree)/".
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Josh Triplett <josh@joshtriplett.org>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Michal Marek <mmarek@suse.cz>
+(cherry picked from commit 371cfd4ff0611d8bc5d18bbb9cc6a2bc3d56cd3d)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+(cherry picked from commit 8d041a8583996852bc953f5c27f5e2b2cff8947b)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ scripts/kconfig/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index b346a34..d8bd6d4 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -108,7 +108,7 @@ configfiles=$(wildcard $(srctree)/kernel/configs/$(1).config $(srctree)/arch/$(S
+ 
+ define mergeconfig
+ $(if $(call configfiles,$(1)),, $(error No configuration exists for this target on this architecture))
+-$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m -O $(objtree) $(objtree)/.config $(call configfiles,$(1))
++$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m .config $(call configfiles,$(1))
+ +$(Q)yes "" | $(MAKE) -f $(srctree)/Makefile oldconfig
+ endef
+ 
+-- 
+2.7.4
+

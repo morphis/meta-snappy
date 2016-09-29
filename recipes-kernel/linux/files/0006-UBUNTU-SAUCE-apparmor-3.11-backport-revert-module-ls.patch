@@ -1,0 +1,38 @@
+From 4c61b48bf4f0eb215c822e5b7cdbca48c561d759 Mon Sep 17 00:00:00 2001
+From: John Johansen <john.johansen@canonical.com>
+Date: Mon, 21 Apr 2014 13:08:03 -0700
+Subject: [PATCH 06/33] UBUNTU: SAUCE: apparmor: 3.11 backport revert
+ module/lsm: Have apparm 5265fc62
+
+revert 5265fc6219ddbf8dfc9b18223448a4997fb06eae
+
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+(cherry picked from commit 003cbd6784c277b519a0c6feef8db35cf7dbbf44)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ security/apparmor/lsm.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+index cd2b4f4..da9da15 100644
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@ -1211,7 +1211,6 @@ static int param_set_aabool(const char *val, const struct kernel_param *kp);
+ static int param_get_aabool(char *buffer, const struct kernel_param *kp);
+ #define param_check_aabool param_check_bool
+ static struct kernel_param_ops param_ops_aabool = {
+-	.flags = KERNEL_PARAM_FL_NOARG,
+ 	.set = param_set_aabool,
+ 	.get = param_get_aabool
+ };
+@@ -1228,7 +1227,6 @@ static int param_set_aalockpolicy(const char *val, const struct kernel_param *kp
+ static int param_get_aalockpolicy(char *buffer, const struct kernel_param *kp);
+ #define param_check_aalockpolicy param_check_bool
+ static struct kernel_param_ops param_ops_aalockpolicy = {
+-	.flags = KERNEL_PARAM_FL_NOARG,
+ 	.set = param_set_aalockpolicy,
+ 	.get = param_get_aalockpolicy
+ };
+-- 
+2.7.4
+

@@ -1,0 +1,73 @@
+From b635f7bf0bdb390a3f48cf36df40a54c2a32cac9 Mon Sep 17 00:00:00 2001
+From: Josh Triplett <josh@joshtriplett.org>
+Date: Fri, 8 Aug 2014 16:25:47 -0700
+Subject: [PATCH 20/33] x86: Add "make tinyconfig" to configure the tiniest
+ possible kernel
+
+Since commit 5d2acfc7b974bbd3858b4dd3f2cdc6362dd8843a ("kconfig: make
+allnoconfig disable options behind EMBEDDED and EXPERT") in 3.15-rc1,
+"make allnoconfig" disables every possible config option.
+
+However, a few configuration options (CC_OPTIMIZE_FOR_SIZE,
+OPTIMIZE_INLINING) produce a smaller kernel when turned on, and a few
+choices exist (compression, highmem, allocator) for which a non-default
+option produces a smaller kernel.
+
+Add a "tinyconfig" option, which starts from allnoconfig and then sets
+these options to configure the tiniest possible kernel.  This provides a
+better baseline for embedded systems or efforts to reduce kernel size.
+
+Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+(cherry picked from commit 0da1d4a0b9516adb2acc4841e9f6da6618f47f4e)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ arch/x86/configs/tiny.config | 1 +
+ kernel/configs/tiny.config   | 4 ++++
+ scripts/kconfig/Makefile     | 5 +++++
+ 3 files changed, 10 insertions(+)
+ create mode 100644 arch/x86/configs/tiny.config
+ create mode 100644 kernel/configs/tiny.config
+
+diff --git a/arch/x86/configs/tiny.config b/arch/x86/configs/tiny.config
+new file mode 100644
+index 0000000..4e2ecfa
+--- /dev/null
++++ b/arch/x86/configs/tiny.config
+@@ -0,0 +1 @@
++CONFIG_NOHIGHMEM=y
+diff --git a/kernel/configs/tiny.config b/kernel/configs/tiny.config
+new file mode 100644
+index 0000000..c2de56a
+--- /dev/null
++++ b/kernel/configs/tiny.config
+@@ -0,0 +1,4 @@
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++CONFIG_KERNEL_XZ=y
++CONFIG_OPTIMIZE_INLINING=y
++CONFIG_SLOB=y
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 1a8e725..911b340 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -117,6 +117,10 @@ PHONY += kvmconfig
+ kvmconfig:
+ 	$(call mergeconfig,kvm_guest)
+ 
++PHONY += tinyconfig
++tinyconfig: allnoconfig
++	$(call mergeconfig,tiny)
++
+ # Help text used by make help
+ help:
+ 	@echo  '  config	  - Update current config utilising a line-oriented program'
+@@ -138,6 +142,7 @@ help:
+ 	@echo  '  listnewconfig   - List new options'
+ 	@echo  '  olddefconfig	  - Same as silentoldconfig but sets new symbols to their default value'
+ 	@echo  '  kvmconfig	  - Enable additional options for guest kernel support'
++	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
+ 
+ # lxdialog stuff
+ check-lxdialog  := $(srctree)/$(src)/lxdialog/check-lxdialog.sh
+-- 
+2.7.4
+

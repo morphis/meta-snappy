@@ -1,0 +1,30 @@
+From b1c08dd8185ec286ed7002b075db68706b22c45d Mon Sep 17 00:00:00 2001
+From: Masahiro Yamada <yamada.m@jp.panasonic.com>
+Date: Tue, 19 Aug 2014 16:34:23 +0900
+Subject: [PATCH 14/33] kbuild: remove redundant clean-files from
+ scripts/kconfig/Makefile
+
+Now mconf, qconf, gconf, nconf are always added to hostprogs-y.
+Files added to hostprogs-y are removed by "make clean".
+
+Signed-off-by: Masahiro Yamada <yamada.m@jp.panasonic.com>
+Signed-off-by: Michal Marek <mmarek@suse.cz>
+---
+ scripts/kconfig/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index e57478aa..785c1ef 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -189,7 +189,6 @@ endif
+ 
+ clean-files	:= qconf.moc .tmp_qtcheck .tmp_gtkcheck
+ clean-files	+= zconf.tab.c zconf.lex.c zconf.hash.c gconf.glade.h
+-clean-files     += mconf qconf gconf nconf
+ clean-files     += config.pot linux.pot
+ 
+ # Check that we have the required ncurses stuff installed for lxdialog (menuconfig)
+-- 
+2.7.4
+

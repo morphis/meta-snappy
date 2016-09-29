@@ -1,0 +1,40 @@
+From 34bfde1efb30af1818f046957615a768eae8da9f Mon Sep 17 00:00:00 2001
+From: Paolo Pisati <paolo.pisati@canonical.com>
+Date: Wed, 4 May 2016 12:00:04 +0200
+Subject: [PATCH 28/33] UBUNTU: SAUCE: add a snapcraft.yaml to create a snappy
+ kernel using this branch
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ snapcraft.yaml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/snapcraft.yaml b/snapcraft.yaml
+index fe94798..c0500f5 100644
+--- a/snapcraft.yaml
++++ b/snapcraft.yaml
+@@ -1,5 +1,5 @@
+-name: snappyv314
+-version: 3.14.0
++name: snappyv310
++version: 3.10.0
+ summary: A generic amd64 kernel built from source
+ description: This is a generic kernel for amd64 / kvm built using x86_64_defconfig plus the minimal snappy config changes
+ type: kernel
+@@ -8,11 +8,11 @@ parts:
+   kernel:
+     plugin: kernel
+     source: .
+-    source-branch: snappy_v3.14
++    source-branch: snappy_v3.10
+     source-type: git
+     kdefconfig: [x86_64_defconfig, snappy/generic.config, snappy/lxc.config, snappy/security.config, snappy/snappy.config, snappy/systemd.config]
+     kconfigs:
+-      - CONFIG_LOCALVERSION="-snappy_v3.14"
++      - CONFIG_LOCALVERSION="-snappy_v3.10"
+     kernel-initrd-modules:
+       - squashfs
+     kernel-initrd-firmware:
+-- 
+2.7.4
+

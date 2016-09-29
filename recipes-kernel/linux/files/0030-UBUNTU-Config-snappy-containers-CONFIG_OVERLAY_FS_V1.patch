@@ -1,0 +1,23 @@
+From 8038859c74313248abddf2391ab5a857245eb4a7 Mon Sep 17 00:00:00 2001
+From: Paolo Pisati <paolo.pisati@canonical.com>
+Date: Thu, 5 May 2016 16:38:06 +0200
+Subject: [PATCH 30/33] UBUNTU: [Config] snappy/containers:
+ CONFIG_OVERLAY_FS_V1=y
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ kernel/configs/snappy/containers.config | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/configs/snappy/containers.config b/kernel/configs/snappy/containers.config
+index 3c23243..19a4744 100644
+--- a/kernel/configs/snappy/containers.config
++++ b/kernel/configs/snappy/containers.config
+@@ -51,3 +51,4 @@ CONFIG_BTRFS_FS=m
+ CONFIG_BLK_DEV_DM=y
+ CONFIG_DM_THIN_PROVISIONING=m
+ CONFIG_OVERLAY_FS=m
++CONFIG_OVERLAY_FS_V1=y
+-- 
+2.7.4
+

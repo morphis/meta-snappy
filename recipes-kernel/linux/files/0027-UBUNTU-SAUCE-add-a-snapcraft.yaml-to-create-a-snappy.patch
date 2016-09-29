@@ -1,0 +1,43 @@
+From f9f7b967cf6d0be74de8463b34097952681cdaa9 Mon Sep 17 00:00:00 2001
+From: Paolo Pisati <paolo.pisati@canonical.com>
+Date: Tue, 26 Apr 2016 11:43:49 +0200
+Subject: [PATCH 27/33] UBUNTU: SAUCE: add a snapcraft.yaml to create a snappy
+ kernel using this branch
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ snapcraft.yaml | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 snapcraft.yaml
+
+diff --git a/snapcraft.yaml b/snapcraft.yaml
+new file mode 100644
+index 0000000..fe94798
+--- /dev/null
++++ b/snapcraft.yaml
+@@ -0,0 +1,22 @@
++name: snappyv314
++version: 3.14.0
++summary: A generic amd64 kernel built from source
++description: This is a generic kernel for amd64 / kvm built using x86_64_defconfig plus the minimal snappy config changes
++type: kernel
++
++parts:
++  kernel:
++    plugin: kernel
++    source: .
++    source-branch: snappy_v3.14
++    source-type: git
++    kdefconfig: [x86_64_defconfig, snappy/generic.config, snappy/lxc.config, snappy/security.config, snappy/snappy.config, snappy/systemd.config]
++    kconfigs:
++      - CONFIG_LOCALVERSION="-snappy_v3.14"
++    kernel-initrd-modules:
++      - squashfs
++    kernel-initrd-firmware:
++      - lib/firmware/e100/d101m_ucode.bin
++      - lib/firmware/e100/d101s_ucode.bin
++      - lib/firmware/e100/d102e_ucode.bin
++    kernel-image-target: bzImage
+-- 
+2.7.4
+
