@@ -4,15 +4,15 @@ LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = " \
-  git://github.com/snapcore/snapd.git;protocol=https;branch=master \
+  git://github.com/snapcore/snapd.git;protocol=https;branch=release/2.16 \
   file://0001-Don-t-fail-to-start-if-etc-environment-does-not-exis.patch \
 "
-# Matches the 2.0.10 tag
-SRCREV = "0a4c5419c1134768570addd13ded7fa49a5a4f6d"
+# Matches the 2.16 tag
+SRCREV = "28dbab0da62d13c511caa4726af2cb289f34f559"
 
 SNAPD_PKG="github.com/snapcore/snapd"
 
-PV = "2.0.10"
+PV = "2.16"
 DEPENDS = " \
 	go-cross \
 	go-crypt \
@@ -69,10 +69,11 @@ do_compile() {
 	export CGO_CFLAGS="${BUILDSDK_CFLAGS} --sysroot=${STAGING_DIR_TARGET}"
 	export CGO_LDFLAGS="${BUILDSDK_LDFLAGS} --sysroot=${STAGING_DIR_TARGET}"
 
-	rm -rf ${B}/build	
+	rm -rf ${B}/build
 	mkdir ${B}/build
-    go build -a -v -o ${B}/build/snapd ${SNAPD_PKG}/cmd/snapd
+	go build -a -v -o ${B}/build/snapd ${SNAPD_PKG}/cmd/snapd
 	go build -a -v -o ${B}/build/snap ${SNAPD_PKG}/cmd/snap
+	go build -a -v -o ${B}/build/snapctl ${SNAPD_PKG}/cmd/snapctl
 	go build -a -v -o ${B}/build/snap-exec ${SNAPD_PKG}/cmd/snap-exec
 }
 
@@ -95,7 +96,12 @@ do_install() {
 	install -m 0755 ${B}/build/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/build/snap-exec ${D}${libdir}/snapd/
 	install -m 0755 ${B}/build/snap ${D}${bindir}
+	install -m 0755 ${B}/build/snapctl ${D}${bindir}
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
 FILES_${PN} += "${systemd_unitdir}/system/ /var/lib/snapd /var/snap"
+
+# ERROR: snapd-2.16-r0 do_package_qa: QA Issue: No GNU_HASH in the elf binary:
+# '.../snapd/usr/lib/snapd/snap-exec' [ldflags]
+INSANE_SKIP_${PN} = "ldflags"
