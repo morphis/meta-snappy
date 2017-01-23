@@ -4,11 +4,8 @@ IMAGE_INSTALL = " \
     packagegroup-core-boot \
     ${ROOTFS_PKGMANAGE_BOOTSTRAP} \
     ${CORE_IMAGE_EXTRA_INSTALL} \
-    snapd \
-    snap-confine \
+    packagegroup-snapd \
     connman \
-    ca-certificates \
-    kernel-module-squashfs \
     bash \
     rpm \
 "
