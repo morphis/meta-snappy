@@ -14,6 +14,7 @@ DEPENDS += "udev glib-2.0"
 EXTRA_OECONF += " \
 	--disable-apparmor \
 	--disable-seccomp \
+	--libexecdir=/usr/lib/snapd \
 "
 
 inherit autotools pkgconfig
@@ -22,4 +23,8 @@ do_configure_prepend() {
 	(cd ${WORKDIR}/git ; ./mkversion.sh)
 }
 
-FILES_${PN} += "${baselib}/udev/snappy-app-dev"
+FILES_${PN} += " \
+	${baselib}/udev/snappy-app-dev \
+	/usr/lib/snapd/snap-confine \
+	/usr/lib/snapd/snap-discard-ns \
+"
