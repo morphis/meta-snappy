@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=95d4102f39f26da9b66fee5d05ac597b"
 PKG_NAME = "gopkg.in/tomb.v2"
 SRC_URI = "git://github.com/go-tomb/tomb;protocol=https;branch=v2"
 
-SRCREV = "14b3d72120e8d10ea6e6b7f87f7175734b1faab8"
+SRCREV = "d5d1b5820637886def9eef33e03a27a9f166942c"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

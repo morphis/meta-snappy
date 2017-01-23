@@ -2,12 +2,12 @@ SUMMARY = "Golang (Go) bindings for GNU's gettext"
 HOMEPAGE = "https://github.com/jessevdk/go-flags"
 SECTION = "devel/go"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=7eb88a85dd46ad8cc80347c7085c6551"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=32424f50f6f3c203a94ee4027ce44e1f"
 
-PKG_NAME = "github.com/gosexy/gettext"
-SRC_URI = "git://github.com/gosexy/gettext;protocol=https"
+PKG_NAME = "github.com/mvo5/gettext.go"
+SRC_URI = "git://${PKG_NAME};protocol=https"
 
-SRCREV = "305f360aee30243660f32600b87c3c1eaa947187"
+SRCREV = "da4fdf605f1b0e2aa523423db5c0a3f727d62019"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

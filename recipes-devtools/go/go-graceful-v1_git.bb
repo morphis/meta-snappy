@@ -1,13 +1,13 @@
-SUMMARY = "Supplementary Go cryptography libraries."
-HOMEPAGE = "https://github.com/jessevdk/go-flags"
+SUMMARY = "Graceful is a Go package enabling graceful shutdown of an http.Handler server."
+HOMEPAGE = "https://github.com/tylerb/graceful/"
 SECTION = "devel/go"
-LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=4fbfc11751fc656016325b178b82069d"
 
-PKG_NAME = "golang.org/x/crypto"
-SRC_URI = "git://github.com/golang/crypto;protocol=https"
+PKG_NAME = "github.com/tylerb/graceful"
+SRC_URI = "git://${PKG_NAME};protocol=https"
 
-SRCREV = "911fafb28f4ee7c7bd483539a6c96190bbbccc3f"
+SRCREV = "50a48b6e73fcc75b45e22c05b79629a67c79e938"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

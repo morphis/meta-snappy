@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c007b54a1743d596f46b2748d9f8c044"
 PKG_NAME = "github.com/gorilla/websocket"
 SRC_URI = "git://github.com/gorilla/websocket;protocol=https"
 
-SRCREV = "5e2e56d5dfd46884df1036f828777ee6273f2cff"
+SRCREV = "234959944d9cf05229b02e8b386e5cffe1e4e04a"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

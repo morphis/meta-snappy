@@ -1,13 +1,13 @@
-SUMMARY = "Golang implementation of Python ConfigParser"
-HOMEPAGE = "https://github.com/mvo5/goconfigparser"
+SUMMARY = "A native Go implementation of macaroons"
+HOMEPAGE = "https://github.com/go-macaroon/macaroon"
 SECTION = "devel/go"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a64983c752e68e915cb4ec5ab6c2cc75"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=f2ade4e207e03454ad3e610a00c0ef15"
 
-PKG_NAME = "github.com/mvo5/goconfigparser"
-SRC_URI = "git://github.com/mvo5/goconfigparser;protocol=https"
+PKG_NAME = "gopkg.in/macaroon.v1"
+SRC_URI = "git://github.com/go-macaroon/macaroon;protocol=https;branch=v1"
 
-SRCREV = "26426272dda20cc76aa1fa44286dc743d2972fe8"
+SRCREV = "ab3940c6c16510a850e1c2dd628b919f0f3f1464"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

@@ -9,7 +9,7 @@ SRCNAME = "mux"
 PKG_NAME = "github.com/gorilla/${SRCNAME}"
 SRC_URI = "git://${PKG_NAME}.git"
 
-SRCREV = "136d54f81f00414c45c3c68dd47e98cc97519c5e"
+SRCREV = "ee1815431e497d3850809578c93ab6705f1a19f7"
 
 S = "${WORKDIR}/git"
 
