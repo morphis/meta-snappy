@@ -1,14 +1,14 @@
-SUMMARY = "A native Go implementation of macaroons"
-HOMEPAGE = "https://github.com/go-macaroon/macaroon"
-SECTION = "devel/go"
-LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=f2ade4e207e03454ad3e610a00c0ef15"
+SUMMARY = "Go supplementary network support"
+HOMEPAGE = "https://github.com/golang/net"
+LICENSE = "BSD"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707"
 
-PKG_NAME = "gopkg.in/macaroon.v1"
-SRC_URI = "git://github.com/go-macaroon/macaroon;protocol=https;branch=v1"
+PKG_NAME = "golang.org/x/net"
 
-SRCREV = "d8fd13e6951f2ce46f0964a58149cf2f103cac9a"
-PV = "0.0+git${SRCREV}"
+PV="1.0+git${SRCPV}"
+
+SRC_URI = "git://github.com/golang/net"
+SRCREV = "6250b412798208e6c90b03b7c4f226de5aa299e2"
 
 S = "${WORKDIR}/git"
 

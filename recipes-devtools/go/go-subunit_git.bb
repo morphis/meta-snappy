@@ -1,13 +1,13 @@
-SUMMARY = "Golang implementation of Python ConfigParser"
-HOMEPAGE = "https://github.com/mvo5/goconfigparser"
+SUMMARY = "Go implementation of subunit"
+HOMEPAGE = "https://github.com/testing-cabal/subunit-go"
 SECTION = "devel/go"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a64983c752e68e915cb4ec5ab6c2cc75"
+LIC_FILES_CHKSUM = "file://BSD;md5=a64983c752e68e915cb4ec5ab6c2cc75"
 
-PKG_NAME = "github.com/mvo5/goconfigparser"
-SRC_URI = "git://github.com/mvo5/goconfigparser;protocol=https"
+PKG_NAME = "github.com/testing-cabal/subunit-go"
+SRC_URI = "git://github.com/testing-cabal/subunit-go;protocol=https"
 
-SRCREV = "26426272dda20cc76aa1fa44286dc743d2972fe8"
+SRCREV = "00b258565a5cf3adaa24b68d31c9e6ec3d2cdbe7"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

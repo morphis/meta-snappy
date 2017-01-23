@@ -13,14 +13,14 @@ required for Snappy:
 # Try it!
 
 1. Follow the Yocto Quickstart guide to get your build host properly
-   setup: https://www.yoctoproject.org/docs/2.1/yocto-project-qs/yocto-project-qs.html
+   setup: https://www.yoctoproject.org/docs/2.2/yocto-project-qs/yocto-project-qs.html
 
 2. Download latest yocto release
 
 ```
  $ git clone git://git.yoctoproject.org/poky
  $ cd poky
- $ git checkout krogoth
+ $ git checkout morty
 ```
 
 3. Fetch meta-snappy layer
@@ -43,22 +43,35 @@ required for Snappy:
  "
 ```
 
-5. Finally you can now build the Snappy demo image via
+5. Modify your conf/local.conf to enable support for systemd which is
+   mandatory for snapd. See https://www.yoctoproject.org/docs/2.2/dev-manual/dev-manual.html#using-systemd-exclusively
+   for more details.
 
 ```
- $ bitbake snappy-demo-image
+cat<<EOF >> conf/local.conf
+DISTRO_FEATURES_append = " systemd"
+VIRTUAL-RUNTIME_init_manager = "systemd"
+DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
+VIRTUAL-RUNTIME_initscripts = ""
+EOF
+```
+
+6. Finally you can now build the Snappy demo image via
+
+```
+ $ bitbake snapd-demo-image
 ```
 
  Depending on your host system the build will take a while.
 
-6. Once the build is done you can boot the image with Qemu with the following
+7. Once the build is done you can boot the image with Qemu with the following
    command:
 
 ```
  $ runqemu qemux86
 ```
 
-7. When the system has fully booted login with root and no password. Afterwards
+8. When the system has fully booted login with root and no password. Afterwards
    you can use the the snap system as normal.
 
 ```

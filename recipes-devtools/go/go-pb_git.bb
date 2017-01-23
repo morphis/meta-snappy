@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6551d79bf661eed41a50157513ee4ad6"
 PKG_NAME = "github.com/cheggaaa/pb"
 SRC_URI = "git://github.com/cheggaaa/pb;protocol=https"
 
-SRCREV = "9453b2db37f4d8bc63751daca63bbe7049eb5e74"
+SRCREV = "6e9d17711bb763b26b68b3931d47f24c1323abab"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

@@ -1,13 +1,13 @@
-SUMMARY = "Golang implementation of Python ConfigParser"
-HOMEPAGE = "https://github.com/mvo5/goconfigparser"
+SUMMARY = "Supplementary Go cryptography libraries."
+HOMEPAGE = "https://github.com/jessevdk/go-flags"
 SECTION = "devel/go"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a64983c752e68e915cb4ec5ab6c2cc75"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707"
 
-PKG_NAME = "github.com/mvo5/goconfigparser"
-SRC_URI = "git://github.com/mvo5/goconfigparser;protocol=https"
+PKG_NAME = "golang.org/x/crypto"
+SRC_URI = "git://github.com/golang/crypto;protocol=https"
 
-SRCREV = "26426272dda20cc76aa1fa44286dc743d2972fe8"
+SRCREV = "351dc6a5bf92a5f2ae22fadeee08eb6a45aa2d93"
 PV = "0.0+git${SRCREV}"
 
 S = "${WORKDIR}/git"

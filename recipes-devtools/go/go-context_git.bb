@@ -9,7 +9,7 @@ SRCNAME = "context"
 PKG_NAME = "github.com/gorilla/${SRCNAME}"
 SRC_URI = "git://${PKG_NAME}.git"
 
-SRCREV = "14f550f51af52180c2eefed15e5fd18d63c0a64a"
+SRCREV = "1c83b3eabd45b6d76072b66b746c20815fb2872d"
 
 S = "${WORKDIR}/git"
 
