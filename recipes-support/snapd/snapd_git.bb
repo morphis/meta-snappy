@@ -3,22 +3,23 @@ HOMEPAGE = "https://www.snapcraft.io"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
+PV = "2.21"
+
 SRC_URI = " \
-  git://github.com/snapcore/snapd.git;protocol=https;branch=release/2.16 \
-  file://0001-Don-t-fail-to-start-if-etc-environment-does-not-exis.patch \
+  git://github.com/snapcore/snapd.git;protocol=https;branch=release/${PV} \
 "
-# Matches the 2.16 tag
-SRCREV = "28dbab0da62d13c511caa4726af2cb289f34f559"
+# Matches the 2.21 tag
+SRCREV = "4e8ba630dcc8921db86eb5f3c53d8bab8d139a70"
 
 SNAPD_PKG="github.com/snapcore/snapd"
 
-PV = "2.16"
 DEPENDS = " \
 	go-cross \
-	go-crypt \
+	go-crypto \
 	go-check-v1 \
 	go-context \
 	go-go-flags \
+	go-graceful-v1 \
 	go-mux \
 	go-gettext \
 	go-goconfigparser \
@@ -28,9 +29,16 @@ DEPENDS = " \
 	go-systemd \
 	go-uboot \
 	go-yaml-v2 \
-	go-macaroon-v2 \
+	go-macaroon-v1 \
+	go-retry-v1 \
 	go-tomb-v2 \
 	go-websocket \
+	go-x-net \
+"
+
+RDEPENDS_${PN} += " \
+	ca-certificates \
+	kernel-module-squashfs \
 "
 
 S = "${WORKDIR}/git"
@@ -87,11 +95,17 @@ do_install() {
 	install -d ${D}/var/lib/snapd/desktop
 	install -d ${D}/var/lib/snapd/environment
 	install -d ${D}/var/snap
+	install -d ${D}/${sysconfdir}
+
+	# NOTE: This file needs to be present to allow snapd's service
+	# units to startup.
+	touch ${D}/${sysconfdir}/environment
 
 	install -m 0644 ${S}/debian/snapd.refresh.timer ${D}${systemd_unitdir}/system
 	install -m 0644 ${S}/debian/snapd.refresh.service ${D}${systemd_unitdir}/system
 	install -m 0644 ${S}/debian/snapd.service ${D}${systemd_unitdir}/system
 	install -m 0644 ${S}/debian/snapd.socket ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/debian/snapd.autoimport.service ${D}${systemd_unitdir}/system
 
 	install -m 0755 ${B}/build/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/build/snap-exec ${D}${libdir}/snapd/
@@ -102,6 +116,6 @@ do_install() {
 RDEPENDS_${PN} += "squashfs-tools"
 FILES_${PN} += "${systemd_unitdir}/system/ /var/lib/snapd /var/snap"
 
-# ERROR: snapd-2.16-r0 do_package_qa: QA Issue: No GNU_HASH in the elf binary:
+# ERROR: snapd-2.21-r0 do_package_qa: QA Issue: No GNU_HASH in the elf binary:
 # '.../snapd/usr/lib/snapd/snap-exec' [ldflags]
 INSANE_SKIP_${PN} = "ldflags"
