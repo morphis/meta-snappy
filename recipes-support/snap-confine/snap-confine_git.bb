@@ -9,7 +9,7 @@ SRCREV = "4e8ba630dcc8921db86eb5f3c53d8bab8d139a70"
 
 S = "${WORKDIR}/git/cmd"
 
-DEPENDS += "udev"
+DEPENDS += "udev glib-2.0"
 
 EXTRA_OECONF += " \
 	--disable-apparmor \
