@@ -5,5 +5,4 @@ inherit packagegroup
 
 RDEPENDS_${PN} = " \
   snapd \
-  snap-confine \
 "
