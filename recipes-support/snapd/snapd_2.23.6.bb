@@ -11,8 +11,8 @@ SRC_URI = " \
 	file://0004-data-systemd-don-t-fail-to-start-if-etc-environment-.patch \
 "
 
-SRC_URI[md5sum] = "f234c4ec29b8c8c5a73327914d1e475d"
-SRC_URI[sha256sum] = "98f44ce67cd2f99c912c53d3e43336af681ed76a800bf1d8fa0e07b81261f656"
+SRC_URI[md5sum] = "fe6f2e4dc11804c97aa775db44765a19"
+SRC_URI[sha256sum] = "4050680634909ed993baa005e564d82ec8d1c1c5c06403eec327912bdbb68e84"
 
 SNAPD_PKG = "github.com/snapcore/snapd"
 
