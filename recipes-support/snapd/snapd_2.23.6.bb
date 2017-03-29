@@ -9,6 +9,7 @@ SRC_URI = " \
 	file://0002-cmd-snap-do-not-allow-classic-snaps-on-other-distrib.patch \
 	file://0003-cmd-disable-check-for-xfs-xqm.h.patch \
 	file://0004-data-systemd-don-t-fail-to-start-if-etc-environment-.patch \
+	file://0005-cmd-add-poky-to-the-list-of-distros-which-don-t-supp.patch \
 "
 
 SRC_URI[md5sum] = "fe6f2e4dc11804c97aa775db44765a19"
