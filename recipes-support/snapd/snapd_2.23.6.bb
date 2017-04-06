@@ -107,7 +107,7 @@ do_install_append() {
 	install -d ${D}/var/lib/snapd/desktop
 	install -d ${D}/var/lib/snapd/environment
 	install -d ${D}/var/snap
-	install -d ${D}/${sysconfdir}
+	install -d ${D}${sysconfdir}/profile.d
 
 	# NOTE: This file needs to be present to allow snapd's service
 	# units to startup.
@@ -123,6 +123,8 @@ do_install_append() {
 	install -m 0755 ${B}/build/snap-exec ${D}${libdir}/snapd/
 	install -m 0755 ${B}/build/snap ${D}${bindir}
 	install -m 0755 ${B}/build/snapctl ${D}${bindir}
+
+	echo "PATH=$PATH:/snap/bin" > ${D}${sysconfdir}/profile.d/20-snap.sh
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
