@@ -3,17 +3,10 @@ HOMEPAGE = "https://www.snapcraft.io"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = " \
-	https://github.com/snapcore/snapd/releases/download/${PV}/snapd_${PV}.tar.xz \
-	file://0001-packaging-use-templates-for-relevant-systemd-units.patch \
-	file://0002-cmd-snap-do-not-allow-classic-snaps-on-other-distrib.patch \
-	file://0003-cmd-disable-check-for-xfs-xqm.h.patch \
-	file://0004-data-systemd-don-t-fail-to-start-if-etc-environment-.patch \
-	file://0005-cmd-add-poky-to-the-list-of-distros-which-don-t-supp.patch \
-"
+SRC_URI = "https://github.com/snapcore/snapd/releases/download/${PV}/snapd_${PV}.vendor.orig.tar.xz"
 
-SRC_URI[md5sum] = "fe6f2e4dc11804c97aa775db44765a19"
-SRC_URI[sha256sum] = "4050680634909ed993baa005e564d82ec8d1c1c5c06403eec327912bdbb68e84"
+SRC_URI[md5sum] = "46ef238be38c7ff308175407351ea7c9"
+SRC_URI[sha256sum] = "3b93392fa7cec296d405c7560af60e45aed6056d5dba53cad558764e26918f28"
 
 SNAPD_PKG = "github.com/snapcore/snapd"
 
@@ -85,16 +78,6 @@ do_compile_prepend() {
 	go build -a -v -o ${B}/build/snap ${SNAPD_PKG}/cmd/snap
 	go build -a -v -o ${B}/build/snapctl ${SNAPD_PKG}/cmd/snapctl
 	go build -a -v -o ${B}/build/snap-exec ${SNAPD_PKG}/cmd/snap-exec
-
-	# Generate the real systemd units out of the available templates
-	cat ${S}/data/systemd/snapd.service.in | \
-		sed s:@libexecdir@:/usr/lib:g | \
-		sed s:@SNAPD_ENVIRONMENT_FILE@:/etc/environment:g > ${B}/snapd.service
-	cat ${S}/data/systemd/snapd.refresh.service.in | \
-		sed s:@bindir@:/usr/bin:g | \
-		sed s:@SNAP_MOUNTDIR@:/snap:g > ${B}/snapd.refresh.service
-	cat ${S}/data/systemd/snapd.autoimport.service.in | \
-		sed s:@bindir@:/usr/bin:g > ${B}/snapd.autoimport.service
 }
 
 do_install_append() {
@@ -113,11 +96,7 @@ do_install_append() {
 	# units to startup.
 	touch ${D}/${sysconfdir}/environment
 
-	install -m 0644 ${S}/data/systemd/snapd.refresh.timer ${D}${systemd_unitdir}/system
-	install -m 0644 ${B}/snapd.refresh.service ${D}${systemd_unitdir}/system
-	install -m 0644 ${B}/snapd.service ${D}${systemd_unitdir}/system
-	install -m 0644 ${S}/data/systemd/snapd.socket ${D}${systemd_unitdir}/system
-	install -m 0644 ${B}/snapd.autoimport.service ${D}${systemd_unitdir}/system
+	oe_runmake -C ${S}/data/systemd install DESTDIR=${D}
 
 	install -m 0755 ${B}/build/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/build/snap-exec ${D}${libdir}/snapd/
