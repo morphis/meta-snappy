@@ -3,10 +3,10 @@ HOMEPAGE = "https://www.snapcraft.io"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "https://github.com/snapcore/snapd/releases/download/${PV}/snapd_${PV}.vendor.orig.tar.xz"
+SRC_URI = "https://github.com/snapcore/snapd/releases/download/${PV}/snapd_${PV}.vendor.tar.xz"
 
-SRC_URI[md5sum] = "46ef238be38c7ff308175407351ea7c9"
-SRC_URI[sha256sum] = "3b93392fa7cec296d405c7560af60e45aed6056d5dba53cad558764e26918f28"
+SRC_URI[md5sum] = "453ffdc2ecdbb7058ac193f81ac37135"
+SRC_URI[sha256sum] = "accd4c94049ce79443ff995c27111f3851e9896bbad502dd5d341f8847645b90"
 
 SNAPD_PKG = "github.com/snapcore/snapd"
 
