@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "accd4c94049ce79443ff995c27111f3851e9896bbad502dd5d341f8847
 GO_IMPORT = "github.com/snapcore/snapd"
 
 DEPENDS += " \
-	go-cross \
+	go-cross-${TARGET_ARCH} \
 	glib-2.0 \
 	udev \
 	xfsprogs \
