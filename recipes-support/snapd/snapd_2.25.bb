@@ -4,7 +4,7 @@ LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = " \
-	https://github.com/snapcore/snapd/releases/download/${PV}/snapd_${PV}.vendor.tar.xz \
+	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz \
 	file://0001-cmd-make-rst2man-optional.patch \
 "
 
@@ -48,10 +48,10 @@ do_configure_prepend() {
 do_compile() {
 	# Ensure we our component at the right place in our GOPATH
 	mkdir -p ${STAGING_LIBDIR}/${TARGET_SYS}/go/src/github.com/snapcore
-	ln -sf ${S} ${STAGING_LIBDIR}/${TARGET_SYS}/go/src/github.com/snapcore/snapd
+	ln -sf ${S} ${STAGING_LIBDIR}/${TARGET_SYS}/go/src/${GO_IMPORT}
 
 	for d in snap snapd snap-exec snapctl; do
-		GOPATH=${STAGING_LIBDIR}/${TARGET_SYS}/go go build github.com/snapcore/snapd/cmd/$d
+		GOPATH=${STAGING_LIBDIR}/${TARGET_SYS}/go go build ${GO_IMPORT}/cmd/$d
 	done
 
 	oe_runmake
