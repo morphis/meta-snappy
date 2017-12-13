@@ -80,7 +80,7 @@ do_install() {
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap ${D}${bindir}
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${bindir}
 
-	echo "PATH=$PATH:/snap/bin" > ${D}${sysconfdir}/profile.d/20-snap.sh
+	echo "PATH=\$PATH:/snap/bin" > ${D}${sysconfdir}/profile.d/20-snap.sh
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
