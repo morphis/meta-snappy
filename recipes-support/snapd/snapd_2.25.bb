@@ -13,6 +13,13 @@ SRC_URI[sha256sum] = "accd4c94049ce79443ff995c27111f3851e9896bbad502dd5d341f8847
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
+GO_INSTALL = "				\
+	${GO_IMPORT}/cmd/snap		\
+	${GO_IMPORT}/cmd/snapd		\
+	${GO_IMPORT}/cmd/snap-exec	\
+	${GO_IMPORT}/cmd/snapctl	\
+	"
+
 DEPENDS += "			\
 	go-cross-${TARGET_ARCH}	\
 	glib-2.0		\
@@ -45,16 +52,12 @@ do_configure_prepend() {
 	(cd ${S} ; ./mkversion.sh ${PV})
 }
 
-do_compile() {
-	# Ensure we our component at the right place in our GOPATH
-	mkdir -p ${STAGING_LIBDIR}/${TARGET_SYS}/go/src/github.com/snapcore
-	ln -sf ${S} ${STAGING_LIBDIR}/${TARGET_SYS}/go/src/${GO_IMPORT}
-
-	for d in snap snapd snap-exec snapctl; do
-		GOPATH=${STAGING_LIBDIR}/${TARGET_SYS}/go go build ${GO_IMPORT}/cmd/$d
-	done
-
-	oe_runmake
+# The go class does export a do_configure function, of which we need
+# to change the symlink set-up, to target snapd's environment.
+do_configure() {
+	mkdir -p ${B}/src/github.com/snapcore
+	ln -snf ${S} ${B}/src/${GO_IMPORT}
+	autotools_do_configure
 }
 
 do_install() {
@@ -72,10 +75,10 @@ do_install() {
 	oe_runmake -C ${B} install DESTDIR=${D}
 	oe_runmake -C ${S}/data/systemd install DESTDIR=${D}
 
-	install -m 0755 ${B}/snapd ${D}${libdir}/snapd/
-	install -m 0755 ${B}/snap-exec ${D}${libdir}/snapd/
-	install -m 0755 ${B}/snap ${D}${bindir}
-	install -m 0755 ${B}/snapctl ${D}${bindir}
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap ${D}${bindir}
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${bindir}
 
 	echo "PATH=$PATH:/snap/bin" > ${D}${sysconfdir}/profile.d/20-snap.sh
 }
