@@ -3,9 +3,9 @@ HOMEPAGE = "https://www.snapcraft.io"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = " \
-	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz \
-	file://0001-cmd-make-rst2man-optional.patch \
+SRC_URI = "									\
+	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
+	file://0001-cmd-make-rst2man-optional.patch				\
 "
 
 SRC_URI[md5sum] = "453ffdc2ecdbb7058ac193f81ac37135"
@@ -13,24 +13,24 @@ SRC_URI[sha256sum] = "accd4c94049ce79443ff995c27111f3851e9896bbad502dd5d341f8847
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
-DEPENDS += " \
-	go-cross-${TARGET_ARCH} \
-	glib-2.0 \
-	udev \
-	xfsprogs \
+DEPENDS += "			\
+	go-cross-${TARGET_ARCH}	\
+	glib-2.0		\
+	udev			\
+	xfsprogs		\
 "
 
-RDEPENDS_${PN} += " \
-	ca-certificates \
-	kernel-module-squashfs \
+RDEPENDS_${PN} += "		\
+	ca-certificates		\
+	kernel-module-squashfs	\
 "
 
 S = "${WORKDIR}/${PN}-${PV}"
 
-EXTRA_OECONF += " \
-	--disable-apparmor \
-	--disable-seccomp \
-	--libexecdir=${libdir}/snapd \
+EXTRA_OECONF += "			\
+	--disable-apparmor		\
+	--disable-seccomp		\
+	--libexecdir=${libdir}/snapd	\
 "
 
 inherit systemd autotools pkgconfig go
@@ -81,11 +81,11 @@ do_install() {
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
-FILES_${PN} += " \
-	${systemd_unitdir}/system/ \
-	/var/lib/snapd \
-	/var/snap \
-	${baselib}/udev/snappy-app-dev \
+FILES_${PN} += "			\
+	${systemd_unitdir}/system/	\
+	/var/lib/snapd			\
+	/var/snap			\
+	${baselib}/udev/snappy-app-dev	\
 "
 
 # ERROR: snapd-2.23.5-r0 do_package_qa: QA Issue: No GNU_HASH in the elf binary:
