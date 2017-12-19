@@ -5,11 +5,10 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=d32239bcb673463ab8
 
 SRC_URI = "									\
 	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
-	file://0001-cmd-make-rst2man-optional.patch				\
 "
 
-SRC_URI[md5sum] = "453ffdc2ecdbb7058ac193f81ac37135"
-SRC_URI[sha256sum] = "accd4c94049ce79443ff995c27111f3851e9896bbad502dd5d341f8847645b90"
+SRC_URI[md5sum] = "4271c51bb2f0619f9e29d5b438a22196"
+SRC_URI[sha256sum] = "16bf669bfb13eda5a4b3a36787696e630102de5b891ed37aeb7caf42ec508f4d"
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
