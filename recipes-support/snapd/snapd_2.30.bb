@@ -17,6 +17,7 @@ GO_INSTALL = "				\
 	${GO_IMPORT}/cmd/snapd		\
 	${GO_IMPORT}/cmd/snap-exec	\
 	${GO_IMPORT}/cmd/snapctl	\
+	${GO_IMPORT}/cmd/snap-seccomp	\
 	"
 
 DEPENDS += "			\
@@ -24,6 +25,7 @@ DEPENDS += "			\
 	glib-2.0		\
 	udev			\
 	xfsprogs		\
+	libseccomp \
 "
 
 RDEPENDS_${PN} += "		\
@@ -35,7 +37,7 @@ S = "${WORKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF += "			\
 	--disable-apparmor		\
-	--disable-seccomp		\
+	--enable-seccomp		\
 	--libexecdir=${libdir}/snapd	\
 "
 
@@ -76,6 +78,7 @@ do_install() {
 
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-seccomp ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap ${D}${bindir}
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${bindir}
 
