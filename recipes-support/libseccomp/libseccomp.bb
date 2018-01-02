@@ -23,6 +23,8 @@ do_compile_ptest() {
     oe_runmake -C tests check-build
 }
 
+DISABLE_STATIC = ""
+
 do_install_ptest() {
     install -d ${D}${PTEST_PATH}/tests
     install -d ${D}${PTEST_PATH}/tools
