@@ -93,7 +93,13 @@ do_install() {
 	install -d ${D}${sysconfdir}/profile.d
 
 	oe_runmake -C ${B} install DESTDIR=${D}
-	oe_runmake -C ${S}/data/systemd install DESTDIR=${D}
+	oe_runmake -C ${S}/data/systemd install \
+		DESTDIR=${D} \
+		BINDIR=${bindir} \
+		LIBEXECDIR=${libdir} \
+		SYSTEMDSYSTEMUNITDIR=${systemd_system_unitdir} \
+		SNAP_MOUNT_DIR=/snap \
+		SNAPD_ENVIRONMENT_FILE=${sysconfdir}/default/snapd
 
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
