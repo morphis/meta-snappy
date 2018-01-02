@@ -12,13 +12,19 @@ SRC_URI[sha256sum] = "16bf669bfb13eda5a4b3a36787696e630102de5b891ed37aeb7caf42ec
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
-GO_INSTALL = "				\
+SHARED_GO_INSTALL = "				\
 	${GO_IMPORT}/cmd/snap		\
 	${GO_IMPORT}/cmd/snapd		\
-	${GO_IMPORT}/cmd/snap-exec	\
 	${GO_IMPORT}/cmd/snapctl	\
 	${GO_IMPORT}/cmd/snap-seccomp	\
 	"
+
+STATIC_GO_INSTALL = " \
+	${GO_IMPORT}/cmd/snap-exec		\
+	${GO_IMPORT}/cmd/snap-update-ns		\
+"
+
+GO_INSTALL = "${SHARED_GO_INSTALL}"
 
 DEPENDS += "			\
 	go-cross-${TARGET_ARCH}	\
@@ -62,6 +68,18 @@ do_configure() {
 	autotools_do_configure
 }
 
+do_compile() {
+	go_do_compile
+	# these *must* be built statically
+	${GO} install -v \
+		-ldflags="${GO_RPATH} -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
+		${GO_IMPORT}/cmd/snap-update-ns \
+		${GO_IMPORT}/cmd/snap-exec
+
+  # build the rest
+  autotools_do_compile
+}
+
 do_install() {
 	install -d ${D}${libdir}/snapd
 	install -d ${D}${bindir}
@@ -80,6 +98,7 @@ do_install() {
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-seccomp ${D}${libdir}/snapd/
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-update-ns ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap ${D}${bindir}
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${bindir}
 
