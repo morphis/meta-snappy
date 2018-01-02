@@ -39,6 +39,7 @@ EXTRA_OECONF += "			\
 	--disable-apparmor		\
 	--enable-seccomp		\
 	--libexecdir=${libdir}/snapd	\
+	--with-snap-mount-dir=/snap \
 "
 
 inherit systemd autotools pkgconfig go
