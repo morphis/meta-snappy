@@ -59,9 +59,11 @@ Aside from OE-core, `meta-snappy` also depends on `meta-openembedded` and
   "
 ```
 
-6. Modify your conf/local.conf to enable support for systemd which is
-   mandatory for snapd. See https://www.yoctoproject.org/docs/latest/dev-manual/dev-manual.html#using-systemd-exclusively
-   for more details.
+6. Modify your conf/local.conf
+
+ Enable support for systemd which is mandatory for snapd. See
+ https://www.yoctoproject.org/docs/latest/dev-manual/dev-manual.html#using-systemd-exclusively
+ for more details.
 
 ```
 cat<<EOF >> conf/local.conf
@@ -72,8 +74,19 @@ VIRTUAL-RUNTIME_initscripts = ""
 EOF
 ```
 
- The build can take up a huge amount of disk space, inheriting `rm_work` class
- will help deal with that (see
+The `snap-confine` tool assumes that the home directory of `root` is `/root`.
+Make sure we don not break this assumption, otherwise snaps mount namespace
+setup will fail early in the process. To use `/root', set `ROOT_HOME` like
+this:`
+
+```
+cat <<EOF >> conf/local.conf
+ROOT_HOME = "/root"
+EOF
+```
+
+ (Optional) The build can take up a huge amount of disk space, inheriting
+ `rm_work` class will help deal with that (see
  https://www.yoctoproject.org/docs/latest/ref-manual/ref-manual.html#ref-classes-rm-work
  for details):
 
