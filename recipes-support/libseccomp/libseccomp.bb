@@ -1,9 +1,13 @@
-SUMMARY = "interface to seccomp filtering mechanism"
-DESCRIPTION = "The libseccomp library provides and easy to use, platform independent,interface to the Linux Kernel's syscall filtering mechanism: seccomp."
+SUMMARY = "Interface to seccomp filtering mechanism"
+DESCRIPTION = "The libseccomp library provides and easy to use, platform \
+               independent, interface to the Linux Kernel's syscall filtering \
+               mechanism: seccomp."
+
 SECTION = "security"
 LICENSE = "LGPL-2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;beginline=0;endline=1;md5=8eac08d22113880357ceb8e7c37f989f"
 
+# v2.3.2 release commit
 SRCREV = "2331d104bc0cbde5f6c54e504a038e52bfe8e12d"
 
 PV = "2.3.2+git${SRCPV}"
