@@ -2,7 +2,6 @@ SUMMARY = "A small demo image to demo Snappy running on OpenEmbedded/Yocto"
 
 IMAGE_INSTALL = " \
     packagegroup-core-boot \
-    ${ROOTFS_PKGMANAGE_BOOTSTRAP} \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     packagegroup-snapd \
     connman \
