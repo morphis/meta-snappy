@@ -71,10 +71,11 @@ do_configure() {
 do_compile() {
 	go_do_compile
 	# these *must* be built statically
-	${GO} install -v \
-		-ldflags="${GO_RPATH} -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
-		${GO_IMPORT}/cmd/snap-update-ns \
-		${GO_IMPORT}/cmd/snap-exec
+	for prog in ${STATIC_GO_INSTALL}; do
+		${GO} install -v \
+		        -ldflags="${GO_RPATH} -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
+		        $prog
+	done
 
   # build the rest
   autotools_do_compile
