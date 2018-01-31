@@ -50,6 +50,11 @@ EXTRA_OECONF += "			\
 
 inherit systemd autotools pkgconfig go
 
+# disable shared runtime for x86
+# https://forum.snapcraft.io/t/yocto-rocko-core-snap-panic/3261
+# GO_DYNLINK is set with arch overrides in goarch.bbclass
+GO_DYNLINK_x86 = ""
+
 # Our tools build with autotools are inside the cmd subdirectory
 # and we need to tell the autotools class to look in there.
 AUTOTOOLS_SCRIPT_PATH = "${S}/cmd"
@@ -71,10 +76,11 @@ do_configure() {
 do_compile() {
 	go_do_compile
 	# these *must* be built statically
-	${GO} install -v \
-		-ldflags="${GO_RPATH} -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
-		${GO_IMPORT}/cmd/snap-update-ns \
-		${GO_IMPORT}/cmd/snap-exec
+	for prog in ${STATIC_GO_INSTALL}; do
+		${GO} install -v \
+		        -ldflags="${GO_RPATH} -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
+		        $prog
+	done
 
   # build the rest
   autotools_do_compile
