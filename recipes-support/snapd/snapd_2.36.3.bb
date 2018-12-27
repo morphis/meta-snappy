@@ -7,8 +7,8 @@ SRC_URI = "									\
 	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
 "
 
-SRC_URI[md5sum] = "cdb72d9110cbbc0a3a7a3896d4a100cb"
-SRC_URI[sha256sum] = "21e27119da2a04d670860c9edbb0d28d190c4ff67fa1a1dc517e0278fe95f2b5"
+SRC_URI[md5sum] = "7399b9eecdd511fe30cf65c4be6d97ae"
+SRC_URI[sha256sum] = "77b98473b334678abbb36ea58fba005dad441f9f453ee87b4ec2ed3dad4aeb59"
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
@@ -103,6 +103,7 @@ do_install() {
 	install -d ${D}/var/snap
 	install -d ${D}${sysconfdir}/profile.d
   install -d ${D}${systemd_unitdir}/system-generators
+  install -d ${D}${systemd_unitdir}/system-environment-generators
 
 	oe_runmake -C ${B} install DESTDIR=${D}
 	oe_runmake -C ${S}/data/systemd install \
@@ -113,7 +114,6 @@ do_install() {
 		SNAP_MOUNT_DIR=/snap \
 		SNAPD_ENVIRONMENT_FILE=${sysconfdir}/default/snapd
 
-  mv ${D}${libdir}/snapd/snapd-generator ${D}${systemd_unitdir}/system-generators/
 
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
@@ -132,6 +132,8 @@ FILES_${PN} += "                        \
 	/var/lib/snapd                        \
 	/var/snap                             \
 	${baselib}/udev/snappy-app-dev        \
+        /usr/lib/systemd/system-environment-generators/ \
+        /lib/systemd/system-environment-generators/ \ 
 "
 
 # ERROR: snapd-2.23.5-r0 do_package_qa: QA Issue: No GNU_HASH in the elf binary:
