@@ -7,8 +7,8 @@ SRC_URI = "									\
 	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
 "
 
-SRC_URI[md5sum] = "cdb72d9110cbbc0a3a7a3896d4a100cb"
-SRC_URI[sha256sum] = "21e27119da2a04d670860c9edbb0d28d190c4ff67fa1a1dc517e0278fe95f2b5"
+SRC_URI[md5sum] = "5c80f586442e6a393f2f347dc951c09e"
+SRC_URI[sha256sum] = "616def5031b831beda28454f0d3d690b4c13b30ed03b4939a25b0894e8d1fe74"
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
@@ -55,6 +55,7 @@ inherit systemd autotools pkgconfig go
 # https://forum.snapcraft.io/t/yocto-rocko-core-snap-panic/3261
 # GO_DYNLINK is set with arch overrides in goarch.bbclass
 GO_DYNLINK_x86 = ""
+GO_DYNLINK_x86-64 = ""
 
 # Our tools build with autotools are inside the cmd subdirectory
 # and we need to tell the autotools class to look in there.
@@ -109,8 +110,6 @@ do_install() {
 		SNAP_MOUNT_DIR=/snap \
 		SNAPD_ENVIRONMENT_FILE=${sysconfdir}/default/snapd
 
-  mv ${D}${libdir}/snapd/snapd-generator ${D}${systemd_unitdir}/system-generators/
-
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-seccomp ${D}${libdir}/snapd/
@@ -129,7 +128,3 @@ FILES_${PN} += "                        \
 	/var/snap                             \
 	${baselib}/udev/snappy-app-dev        \
 "
-
-# ERROR: snapd-2.23.5-r0 do_package_qa: QA Issue: No GNU_HASH in the elf binary:
-# '.../snapd/usr/lib/snapd/snap-exec' [ldflags]
-INSANE_SKIP_${PN} = "ldflags"
