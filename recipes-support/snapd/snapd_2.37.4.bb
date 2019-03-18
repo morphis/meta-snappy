@@ -16,6 +16,7 @@ SHARED_GO_INSTALL = "				\
 	${GO_IMPORT}/cmd/snap		\
 	${GO_IMPORT}/cmd/snapd		\
 	${GO_IMPORT}/cmd/snap-seccomp	\
+	${GO_IMPORT}/cmd/snap-failure	\
 	"
 
 STATIC_GO_INSTALL = " \
