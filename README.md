@@ -10,7 +10,7 @@ required for Snappy:
  * snapd
  * libseccomp
 
-The layer currently supports Yocto 2.4.x Rocko release.
+The layer currently supports Yocto 2.6.x Thud release.
 
 Aside from OE-core, `meta-snappy` also depends on `meta-openembedded` and
 `meta-filesystems`.
