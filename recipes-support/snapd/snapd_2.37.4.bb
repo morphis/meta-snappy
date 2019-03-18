@@ -15,13 +15,13 @@ GO_IMPORT = "github.com/snapcore/snapd"
 SHARED_GO_INSTALL = "				\
 	${GO_IMPORT}/cmd/snap		\
 	${GO_IMPORT}/cmd/snapd		\
-	${GO_IMPORT}/cmd/snapctl	\
 	${GO_IMPORT}/cmd/snap-seccomp	\
 	"
 
 STATIC_GO_INSTALL = " \
 	${GO_IMPORT}/cmd/snap-exec		\
 	${GO_IMPORT}/cmd/snap-update-ns		\
+	${GO_IMPORT}/cmd/snapctl		\
 "
 
 GO_INSTALL = "${SHARED_GO_INSTALL}"
@@ -114,8 +114,9 @@ do_install() {
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-seccomp ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-update-ns ${D}${libdir}/snapd/
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap ${D}${bindir}
-	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${bindir}
+	ln -s ${libdir}/snapd/snapctl ${D}${bindir}/snapctl
 
 	echo "PATH=\$PATH:/snap/bin" > ${D}${sysconfdir}/profile.d/20-snap.sh
 }
