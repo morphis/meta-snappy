@@ -120,6 +120,9 @@ do_install() {
 	ln -s ${libdir}/snapd/snapctl ${D}${bindir}/snapctl
 
 	echo "PATH=\$PATH:/snap/bin" > ${D}${sysconfdir}/profile.d/20-snap.sh
+
+	# ubuntu-core-launcher is dead
+	rm -fv ${D}${bindir}/ubuntu-core-launcher
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
