@@ -69,8 +69,9 @@ do_configure_prepend() {
 # The go class does export a do_configure function, of which we need
 # to change the symlink set-up, to target snapd's environment.
 do_configure() {
-	mkdir -p ${B}/src/github.com/snapcore
-	ln -snf ${S} ${B}/src/${GO_IMPORT}
+	mkdir -p ${S}/src/github.com/snapcore
+	ln -snf ${S} ${S}/src/${GO_IMPORT}
+	go_do_configure
 	autotools_do_configure
 }
 
