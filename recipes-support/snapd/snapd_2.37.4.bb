@@ -27,7 +27,6 @@ STATIC_GO_INSTALL = " \
 GO_INSTALL = "${SHARED_GO_INSTALL}"
 
 DEPENDS += "			\
-	go-cross-${TARGET_ARCH}	\
 	glib-2.0		\
 	udev			\
 	xfsprogs		\
