@@ -100,7 +100,7 @@ do_install() {
 	install -d ${D}/var/lib/snapd/environment
 	install -d ${D}/var/snap
 	install -d ${D}${sysconfdir}/profile.d
-  install -d ${D}${systemd_unitdir}/system-generators
+	install -d ${D}${systemd_unitdir}/system-generators
 
 	oe_runmake -C ${B} install DESTDIR=${D}
 	oe_runmake -C ${S}/data/systemd install \
@@ -110,6 +110,14 @@ do_install() {
 		SYSTEMDSYSTEMUNITDIR=${systemd_system_unitdir} \
 		SNAP_MOUNT_DIR=/snap \
 		SNAPD_ENVIRONMENT_FILE=${sysconfdir}/default/snapd
+
+	# systemd system-environment-generators directory is not handled with a
+	# varaible in systemd.pc so the build code does an educated guess of using
+	# ${prefix}/lib/systemd/system-environment-generators which ends up as
+	# /usr/lib/systemd/.., but we want /lib/systemd/..
+	cp -av ${D}${prefix}${systemd_unitdir}/system-environment-generators \
+	   ${D}${systemd_unitdir}
+	rm -rf ${D}${prefix}${systemd_unitdir}
 
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
@@ -126,10 +134,11 @@ do_install() {
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
-FILES_${PN} += "                        \
-	${systemd_unitdir}/system/            \
-	${systemd_unitdir}/system-generators/	\
-	/var/lib/snapd                        \
-	/var/snap                             \
-	${baselib}/udev/snappy-app-dev        \
+FILES_${PN} += "                                    \
+	${systemd_unitdir}/system/                        \
+	${systemd_unitdir}/system-generators/             \
+	${systemd_unitdir}/system-environment-generators/	\
+	/var/lib/snapd                                    \
+	/var/snap                                         \
+	${baselib}/udev/snappy-app-dev                    \
 "
