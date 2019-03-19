@@ -15,19 +15,19 @@ GO_IMPORT = "github.com/snapcore/snapd"
 SHARED_GO_INSTALL = "				\
 	${GO_IMPORT}/cmd/snap		\
 	${GO_IMPORT}/cmd/snapd		\
-	${GO_IMPORT}/cmd/snapctl	\
 	${GO_IMPORT}/cmd/snap-seccomp	\
+	${GO_IMPORT}/cmd/snap-failure	\
 	"
 
 STATIC_GO_INSTALL = " \
 	${GO_IMPORT}/cmd/snap-exec		\
 	${GO_IMPORT}/cmd/snap-update-ns		\
+	${GO_IMPORT}/cmd/snapctl		\
 "
 
 GO_INSTALL = "${SHARED_GO_INSTALL}"
 
 DEPENDS += "			\
-	go-cross-${TARGET_ARCH}	\
 	glib-2.0		\
 	udev			\
 	xfsprogs		\
@@ -70,8 +70,9 @@ do_configure_prepend() {
 # The go class does export a do_configure function, of which we need
 # to change the symlink set-up, to target snapd's environment.
 do_configure() {
-	mkdir -p ${B}/src/github.com/snapcore
-	ln -snf ${S} ${B}/src/${GO_IMPORT}
+	mkdir -p ${S}/src/github.com/snapcore
+	ln -snf ${S} ${S}/src/${GO_IMPORT}
+	go_do_configure
 	autotools_do_configure
 }
 
@@ -99,7 +100,7 @@ do_install() {
 	install -d ${D}/var/lib/snapd/environment
 	install -d ${D}/var/snap
 	install -d ${D}${sysconfdir}/profile.d
-  install -d ${D}${systemd_unitdir}/system-generators
+	install -d ${D}${systemd_unitdir}/system-generators
 
 	oe_runmake -C ${B} install DESTDIR=${D}
 	oe_runmake -C ${S}/data/systemd install \
@@ -110,21 +111,34 @@ do_install() {
 		SNAP_MOUNT_DIR=/snap \
 		SNAPD_ENVIRONMENT_FILE=${sysconfdir}/default/snapd
 
+	# systemd system-environment-generators directory is not handled with a
+	# varaible in systemd.pc so the build code does an educated guess of using
+	# ${prefix}/lib/systemd/system-environment-generators which ends up as
+	# /usr/lib/systemd/.., but we want /lib/systemd/..
+	cp -av ${D}${prefix}${systemd_unitdir}/system-environment-generators \
+	   ${D}${systemd_unitdir}
+	rm -rf ${D}${prefix}${systemd_unitdir}
+
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapd ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-exec ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-seccomp ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-update-ns ${D}${libdir}/snapd/
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap ${D}${bindir}
-	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${bindir}
+	ln -s ${libdir}/snapd/snapctl ${D}${bindir}/snapctl
 
 	echo "PATH=\$PATH:/snap/bin" > ${D}${sysconfdir}/profile.d/20-snap.sh
+
+	# ubuntu-core-launcher is dead
+	rm -fv ${D}${bindir}/ubuntu-core-launcher
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
-FILES_${PN} += "                        \
-	${systemd_unitdir}/system/            \
-	${systemd_unitdir}/system-generators/	\
-	/var/lib/snapd                        \
-	/var/snap                             \
-	${baselib}/udev/snappy-app-dev        \
+FILES_${PN} += "                                    \
+	${systemd_unitdir}/system/                        \
+	${systemd_unitdir}/system-generators/             \
+	${systemd_unitdir}/system-environment-generators/	\
+	/var/lib/snapd                                    \
+	/var/snap                                         \
+	${baselib}/udev/snappy-app-dev                    \
 "
