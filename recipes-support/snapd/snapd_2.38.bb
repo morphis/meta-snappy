@@ -132,6 +132,12 @@ do_install() {
 
 	# ubuntu-core-launcher is dead
 	rm -fv ${D}${bindir}/ubuntu-core-launcher
+	# drop unnecessary units
+	rm -fv ${D}${systemd_unitdir}/system/snapd.system-shutdown.service
+	rm -fv ${D}${systemd_unitdir}/system/snapd.snap-repair.*
+	rm -fv ${D}${systemd_unitdir}/system/snapd.core-fixup.*
+	# and related scripts
+	rm -fv ${D}${libdir}/snapd/snapd.core-fixup.sh
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
