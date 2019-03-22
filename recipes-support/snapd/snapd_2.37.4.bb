@@ -124,6 +124,7 @@ do_install() {
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-seccomp ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-update-ns ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snapctl ${D}${libdir}/snapd/
+	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap-failure ${D}${libdir}/snapd/
 	install -m 0755 ${B}/${GO_BUILD_BINDIR}/snap ${D}${bindir}
 	ln -s ${libdir}/snapd/snapctl ${D}${bindir}/snapctl
 

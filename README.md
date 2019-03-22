@@ -25,7 +25,7 @@ Aside from OE-core, `meta-snappy` also depends on `meta-openembedded` and
 ```
  $ git clone git://git.yoctoproject.org/poky
  $ cd poky
- $ git checkout rocko
+ $ git checkout thud
 ```
 
 3. Fetch meta-openembedded layer:
@@ -33,7 +33,7 @@ Aside from OE-core, `meta-snappy` also depends on `meta-openembedded` and
 ```
  $ git clone git://git.openembedded.org/meta-openembedded
  $ cd meta-openembedded
- $ git checkout rocko
+ $ git checkout thud
 ```
 
 4. Fetch meta-snappy layer
