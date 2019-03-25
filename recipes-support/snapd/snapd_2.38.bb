@@ -7,8 +7,8 @@ SRC_URI = "									\
 	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
 "
 
-SRC_URI[md5sum] = "5c80f586442e6a393f2f347dc951c09e"
-SRC_URI[sha256sum] = "616def5031b831beda28454f0d3d690b4c13b30ed03b4939a25b0894e8d1fe74"
+SRC_URI[md5sum] = "a5ef03d7fbefcd93525ec6d13aab301e"
+SRC_URI[sha256sum] = "64ac100e5da2f588824a963eb2358663326d468e38d5556b289ffd9f100c1176"
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
@@ -132,6 +132,12 @@ do_install() {
 
 	# ubuntu-core-launcher is dead
 	rm -fv ${D}${bindir}/ubuntu-core-launcher
+	# drop unnecessary units
+	rm -fv ${D}${systemd_unitdir}/system/snapd.system-shutdown.service
+	rm -fv ${D}${systemd_unitdir}/system/snapd.snap-repair.*
+	rm -fv ${D}${systemd_unitdir}/system/snapd.core-fixup.*
+	# and related scripts
+	rm -fv ${D}${libdir}/snapd/snapd.core-fixup.sh
 }
 
 RDEPENDS_${PN} += "squashfs-tools"
