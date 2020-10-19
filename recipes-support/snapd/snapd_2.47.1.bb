@@ -3,15 +3,12 @@ HOMEPAGE = "https://www.snapcraft.io"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/${PN}-${PV}/COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-# FIXME: upgrade snapd v2.38 to v2.47.1
-# PN/PV are extracted from the recipe file name!
-# https://github.com/snapcore/snapd/releases/download/2.47.1/snapd_2.47.1.vendor.tar.xz
 SRC_URI = "									\
 	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
 "
 
-SRC_URI[md5sum] = "a5ef03d7fbefcd93525ec6d13aab301e"
-SRC_URI[sha256sum] = "64ac100e5da2f588824a963eb2358663326d468e38d5556b289ffd9f100c1176"
+SRC_URI[md5sum] = "d6de9d882b3d3b219d637a028b2c2279"
+SRC_URI[sha256sum] = "4f9666cd15d588017d4287aafdb3e7855748509afaa3002e6d149db1424e032f"
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
