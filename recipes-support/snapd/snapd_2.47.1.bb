@@ -44,7 +44,6 @@ S = "${WORKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF += "			\
 	--disable-apparmor		\
-	--enable-seccomp		\
 	--libexecdir=${libdir}/snapd	\
 	--with-snap-mount-dir=/snap \
 "
