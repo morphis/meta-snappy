@@ -55,6 +55,8 @@ inherit systemd autotools pkgconfig go
 # GO_DYNLINK is set with arch overrides in goarch.bbclass
 GO_DYNLINK_x86 = ""
 GO_DYNLINK_x86-64 = ""
+GO_DYNLINK_arm = ""
+GO_DYNLINK_aarch64 = ""
 
 # Our tools build with autotools are inside the cmd subdirectory
 # and we need to tell the autotools class to look in there.
