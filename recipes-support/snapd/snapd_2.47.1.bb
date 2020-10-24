@@ -31,7 +31,8 @@ DEPENDS += "			\
 	glib-2.0		\
 	udev			\
 	xfsprogs		\
-	libseccomp \
+	libseccomp      \
+	libapparmor     \
 "
 
 RDEPENDS_${PN} += "		\
@@ -43,7 +44,8 @@ RDEPENDS_${PN} += "		\
 S = "${WORKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF += "			\
-	--disable-apparmor		\
+	--enable-seccomp		\
+	--enable-apparmor		\
 	--libexecdir=${libdir}/snapd	\
 	--with-snap-mount-dir=/snap \
 "
