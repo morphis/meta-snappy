@@ -84,7 +84,7 @@ do_compile() {
 	# these *must* be built statically
 	for prog in ${STATIC_GO_INSTALL}; do
 		${GO} install -v \
-		        -ldflags="${GO_RPATH} -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
+		        -ldflags="${GO_RPATH} -linkmode=external -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
 		        $prog
 	done
 
