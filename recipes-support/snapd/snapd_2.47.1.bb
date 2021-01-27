@@ -7,8 +7,8 @@ SRC_URI = "									\
 	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
 "
 
-SRC_URI[md5sum] = "a5ef03d7fbefcd93525ec6d13aab301e"
-SRC_URI[sha256sum] = "64ac100e5da2f588824a963eb2358663326d468e38d5556b289ffd9f100c1176"
+SRC_URI[md5sum] = "d6de9d882b3d3b219d637a028b2c2279"
+SRC_URI[sha256sum] = "4f9666cd15d588017d4287aafdb3e7855748509afaa3002e6d149db1424e032f"
 
 GO_IMPORT = "github.com/snapcore/snapd"
 
@@ -31,7 +31,8 @@ DEPENDS += "			\
 	glib-2.0		\
 	udev			\
 	xfsprogs		\
-	libseccomp \
+	libseccomp      \
+	libapparmor     \
 "
 
 RDEPENDS_${PN} += "		\
@@ -43,8 +44,8 @@ RDEPENDS_${PN} += "		\
 S = "${WORKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF += "			\
-	--disable-apparmor		\
 	--enable-seccomp		\
+	--enable-apparmor		\
 	--libexecdir=${libdir}/snapd	\
 	--with-snap-mount-dir=/snap \
 "
@@ -56,6 +57,8 @@ inherit systemd autotools pkgconfig go
 # GO_DYNLINK is set with arch overrides in goarch.bbclass
 GO_DYNLINK_x86 = ""
 GO_DYNLINK_x86-64 = ""
+GO_DYNLINK_arm = ""
+GO_DYNLINK_aarch64 = ""
 
 # Our tools build with autotools are inside the cmd subdirectory
 # and we need to tell the autotools class to look in there.
