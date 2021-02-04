@@ -10,6 +10,9 @@ SRC_URI = "									\
 SRC_URI[md5sum] = "d6de9d882b3d3b219d637a028b2c2279"
 SRC_URI[sha256sum] = "4f9666cd15d588017d4287aafdb3e7855748509afaa3002e6d149db1424e032f"
 
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'apparmor', 'apparmor', '', d)}"
+PACKAGECONFIG[apparmor] = "--enable-apparmor,--disable-apparmor,apparmor,apparmor"
+
 GO_IMPORT = "github.com/snapcore/snapd"
 
 SHARED_GO_INSTALL = "				\
@@ -32,7 +35,6 @@ DEPENDS += "			\
 	udev			\
 	xfsprogs		\
 	libseccomp      \
-	libapparmor     \
 "
 
 RDEPENDS_${PN} += "		\
@@ -44,8 +46,6 @@ RDEPENDS_${PN} += "		\
 S = "${WORKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF += "			\
-	--enable-seccomp		\
-	--enable-apparmor		\
 	--libexecdir=${libdir}/snapd	\
 	--with-snap-mount-dir=/snap \
 "
@@ -84,7 +84,7 @@ do_compile() {
 	# these *must* be built statically
 	for prog in ${STATIC_GO_INSTALL}; do
 		${GO} install -v \
-		        -ldflags="${GO_RPATH} -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
+		        -ldflags="${GO_RPATH} -linkmode=external -extldflags '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${GO_RPATH_LINK} ${LDFLAGS} -static'" \
 		        $prog
 	done
 
