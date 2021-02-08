@@ -46,6 +46,7 @@ RDEPENDS_${PN} += "		\
 S = "${WORKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF += "			\
+	--enable-apparmor               \
 	--libexecdir=${libdir}/snapd	\
 	--with-snap-mount-dir=/snap \
 "
