@@ -1,0 +1,34 @@
+From c08913d047689f4934405e9ea745c6e4f616d4cb Mon Sep 17 00:00:00 2001
+From: John Johansen <john.johansen@canonical.com>
+Date: Wed, 15 Oct 2014 04:04:01 -0700
+Subject: [PATCH 08/33] UBUNTU: SAUCE: (no-up) fix: bad unix_addr_fs macro
+
+the unix_addr_fs macro should not check for a leading /, instead it
+should be checking for the addr not being an abstract socket addr
+(leading \0)
+
+BugLink: http://bugs.launchpad.net/bugs/1390223
+
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ security/apparmor/include/af_unix.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/apparmor/include/af_unix.h b/security/apparmor/include/af_unix.h
+index 24902b3..ccffd23 100644
+--- a/security/apparmor/include/af_unix.h
++++ b/security/apparmor/include/af_unix.h
+@@ -27,7 +27,7 @@
+ 
+ #define unix_addr(A) ((struct sockaddr_un *)(A))
+ #define unix_addr_anon(A, L) ((A) && unix_addr_len(L) <= 0)
+-#define unix_addr_fs(A, L) (!unix_addr_anon(A, L) && unix_addr(A)->sun_path[0] == '/')
++#define unix_addr_fs(A, L) (!unix_addr_anon(A, L) && !addr_unix_abstract_name(unix_addr(A)->sun_path))
+ 
+ #define UNIX_ANONYMOUS(U) (!unix_sk(U)->addr)
+ /* from net/unix/af_unix.c */
+-- 
+2.7.4
+

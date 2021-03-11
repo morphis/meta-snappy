@@ -1,0 +1,79 @@
+From c291d0ad6ca93d2873acd305b5c5f04dcc1a1c61 Mon Sep 17 00:00:00 2001
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date: Fri, 13 Mar 2015 15:21:39 +0900
+Subject: [PATCH 22/33] kbuild: mergeconfig: move an error check to
+ merge_config.sh
+
+Currently, "make tinyconfig" does not work with "-j" option.
+
+  $ make mrproper
+  $ make -j8 tinyconfig
+    HOSTCC  scripts/basic/fixdep
+    HOSTCC  scripts/kconfig/conf.o
+    SHIPPED scripts/kconfig/zconf.tab.c
+    SHIPPED scripts/kconfig/zconf.lex.c
+    SHIPPED scripts/kconfig/zconf.hash.c
+    HOSTCC  scripts/kconfig/zconf.tab.o
+    HOSTLD  scripts/kconfig/conf
+  scripts/kconfig/conf --allnoconfig Kconfig
+  #
+  # configuration written to .config
+  #
+  scripts/kconfig/Makefile:122: *** You need an existing .config
+  for this target.  Stop.
+  make: *** [tinyconfig] Error 2
+
+As shown above, "allnoconfig" has created the .config file before
+mergeconfig is called, but Make still raises a false alarm because
+of some sort of race condition.
+
+We can fix this issue by moving the error check to the shell script.
+
+Anyway, scripts/kconfig/merge_config.sh always requires an existing
+.config as a base file.  It is reasonable to check its existence in
+the shell script.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Josh Triplett <josh@joshtriplett.org>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Michal Marek <mmarek@suse.cz>
+(cherry picked from commit b9fe99c5b994c6ddc57780993966b18899526c0b)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+(cherry picked from commit bb41f2f54451b92a739925de90b3d6b219701fe8)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ scripts/kconfig/Makefile        | 1 -
+ scripts/kconfig/merge_config.sh | 5 +++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 7a8ac3b..b346a34 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -107,7 +107,6 @@ endif
+ configfiles=$(wildcard $(srctree)/kernel/configs/$(1).config $(srctree)/arch/$(SRCARCH)/configs/$(1).config)
+ 
+ define mergeconfig
+-$(if $(wildcard $(objtree)/.config),, $(error You need an existing .config for this target))
+ $(if $(call configfiles,$(1)),, $(error No configuration exists for this target on this architecture))
+ $(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m -O $(objtree) $(objtree)/.config $(call configfiles,$(1))
+ +$(Q)yes "" | $(MAKE) -f $(srctree)/Makefile oldconfig
+diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+index 81b0c61..ef9d344 100755
+--- a/scripts/kconfig/merge_config.sh
++++ b/scripts/kconfig/merge_config.sh
+@@ -80,6 +80,11 @@ done
+ INITFILE=$1
+ shift;
+ 
++if [ ! -r "$INITFILE" ]; then
++	echo "The base file '$INITFILE' does not exist.  Exit." >&2
++	exit 1
++fi
++
+ MERGE_LIST=$*
+ SED_CONFIG_EXP="s/^\(# \)\{0,1\}\(CONFIG_[a-zA-Z0-9_]*\)[= ].*/\2/p"
+ TMP_FILE=$(mktemp ./.tmp.config.XXXXXXXXXX)
+-- 
+2.7.4
+

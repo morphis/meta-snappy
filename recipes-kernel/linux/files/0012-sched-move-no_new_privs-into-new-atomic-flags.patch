@@ -1,0 +1,158 @@
+From 23e9814e96219f280506d57eac0c9f19117728e8 Mon Sep 17 00:00:00 2001
+From: Kees Cook <keescook@chromium.org>
+Date: Wed, 21 May 2014 15:23:46 -0700
+Subject: [PATCH 12/33] sched: move no_new_privs into new atomic flags
+
+BugLink: http://bugs.launchpad.net/bugs/1379020
+
+Since seccomp transitions between threads requires updates to the
+no_new_privs flag to be atomic, the flag must be part of an atomic flag
+set. This moves the nnp flag into a separate task field, and introduces
+accessors.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Andy Lutomirski <luto@amacapital.net>
+(back ported from commit 1d4457f99928a968767f6405b4a1f50845aa15fd)
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+
+Conflicts:
+	security/apparmor/domain.c
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+
+(cherry picked from commit a276077c1829343499bf82081e954064e58aaf3f)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+
+Conflicts:
+	kernel/sys.c
+
+(cherry picked from commit 4cc38c1a8b9f7ecee983ce42c423aa2744144017)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ fs/exec.c                  |  4 ++--
+ include/linux/sched.h      | 18 +++++++++++++++---
+ kernel/seccomp.c           |  2 +-
+ kernel/sys.c               |  4 ++--
+ security/apparmor/domain.c |  4 ++--
+ 5 files changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index acbd7ac..065fcb1 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1239,7 +1239,7 @@ static int check_unsafe_exec(struct linux_binprm *bprm)
+ 	 * This isn't strictly necessary, but it makes it harder for LSMs to
+ 	 * mess up.
+ 	 */
+-	if (current->no_new_privs)
++	if (task_no_new_privs(current))
+ 		bprm->unsafe |= LSM_UNSAFE_NO_NEW_PRIVS;
+ 
+ 	n_fs = 1;
+@@ -1279,7 +1279,7 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
+ 	if (bprm->file->f_path.mnt->mnt_flags & MNT_NOSUID)
+ 		return;
+ 
+-	if (current->no_new_privs)
++	if (task_no_new_privs(current))
+ 		return;
+ 
+ 	inode = file_inode(bprm->file);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 74669c1..1ba50cb 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1150,13 +1150,12 @@ struct task_struct {
+ 				 * execve */
+ 	unsigned in_iowait:1;
+ 
+-	/* task may not gain privileges */
+-	unsigned no_new_privs:1;
+-
+ 	/* Revert to default priority/policy when forking */
+ 	unsigned sched_reset_on_fork:1;
+ 	unsigned sched_contributes_to_load:1;
+ 
++	unsigned long atomic_flags; /* Flags needing atomic access. */
++
+ 	pid_t pid;
+ 	pid_t tgid;
+ 
+@@ -1729,6 +1728,19 @@ static inline void memalloc_noio_restore(unsigned int flags)
+ 	current->flags = (current->flags & ~PF_MEMALLOC_NOIO) | flags;
+ }
+ 
++/* Per-process atomic flags. */
++#define PFA_NO_NEW_PRIVS 0x00000001	/* May not gain new privileges. */
++
++static inline bool task_no_new_privs(struct task_struct *p)
++{
++	return test_bit(PFA_NO_NEW_PRIVS, &p->atomic_flags);
++}
++
++static inline void task_set_no_new_privs(struct task_struct *p)
++{
++	set_bit(PFA_NO_NEW_PRIVS, &p->atomic_flags);
++}
++
+ /*
+  * task->jobctl flags
+  */
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index b7a1004..cc0b567 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -247,7 +247,7 @@ static long seccomp_attach_filter(struct sock_fprog *fprog)
+ 	 * This avoids scenarios where unprivileged tasks can affect the
+ 	 * behavior of privileged children.
+ 	 */
+-	if (!current->no_new_privs &&
++	if (!task_no_new_privs(current) &&
+ 	    security_capable_noaudit(current_cred(), current_user_ns(),
+ 				     CAP_SYS_ADMIN) != 0)
+ 		return -EACCES;
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 1a59b5b..61edf9d 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2401,12 +2401,12 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+ 		if (arg2 != 1 || arg3 || arg4 || arg5)
+ 			return -EINVAL;
+ 
+-		current->no_new_privs = 1;
++		task_set_no_new_privs(current);
+ 		break;
+ 	case PR_GET_NO_NEW_PRIVS:
+ 		if (arg2 || arg3 || arg4 || arg5)
+ 			return -EINVAL;
+-		return current->no_new_privs ? 1 : 0;
++		return task_no_new_privs(current) ? 1 : 0;
+ 	default:
+ 		error = -EINVAL;
+ 		break;
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index 1d07506..09eb1a9 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -607,7 +607,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, bool permtest)
+ 	 * There is no exception for unconfined as change_hat is not
+ 	 * available.
+ 	 */
+-	if (current->no_new_privs)
++	if (task_no_new_privs(current))
+ 		return -EPERM;
+ 
+ 	/* released below */
+@@ -766,7 +766,7 @@ int aa_change_profile(const char *ns_name, const char *hname, bool onexec,
+ 	 * no_new_privs is set because this aways results in a reduction
+ 	 * of permissions.
+ 	 */
+-	if (current->no_new_privs && !unconfined(label)) {
++	if (task_no_new_privs(current) && !unconfined(label)) {
+ 		aa_put_label(label);
+ 		put_cred(cred);
+ 		return -EPERM;
+-- 
+2.7.4
+

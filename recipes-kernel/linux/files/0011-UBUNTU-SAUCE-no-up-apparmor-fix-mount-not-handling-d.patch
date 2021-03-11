@@ -1,0 +1,38 @@
+From 3eda9e737fca5f2dc3cd9f976420749e451546a1 Mon Sep 17 00:00:00 2001
+From: John Johansen <john.johansen@canonical.com>
+Date: Thu, 1 Oct 2015 10:28:20 -0700
+Subject: [PATCH 11/33] UBUNTU: SAUCE: (no-up) apparmor: fix mount not handling
+ disconnected paths
+
+upstream: No. This is a fix to an out of tree apparmor 3 patch
+
+BugLink: http://bugs.launchpad.net/bugs/1496430
+
+Mount rules are not honoring the attach_disconnected flag, causing
+apparmor to deny mounts for lxc and docker even when the appropriate
+rule exists in the profile.
+
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Acked-by: Brad Figg <brad.figg@canonical.com>
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ security/apparmor/mount.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/apparmor/mount.c b/security/apparmor/mount.c
+index ee6229d..b2d3354 100644
+--- a/security/apparmor/mount.c
++++ b/security/apparmor/mount.c
+@@ -332,7 +332,7 @@ audit:
+ static int path_flags(struct aa_profile *profile, struct path *path)
+ {
+ 	return profile->path_flags |
+-		S_ISDIR(path->dentry->d_inode->i_mode) ? PATH_IS_DIR : 0;
++		(S_ISDIR(path->dentry->d_inode->i_mode) ? PATH_IS_DIR : 0);
+ }
+ 
+ int aa_remount(struct aa_label *label, struct path *path, unsigned long flags,
+-- 
+2.7.4
+

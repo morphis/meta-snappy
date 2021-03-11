@@ -1,0 +1,30 @@
+From cfb683014315b8745a0e3deb25bf1660c45e769e Mon Sep 17 00:00:00 2001
+From: Borislav Petkov <bp@suse.de>
+Date: Fri, 21 Jun 2013 10:04:51 +0200
+Subject: [PATCH 17/33] x86/platform: Add kvmconfig to the phony targets
+
+... so as not to disable it with a file of the same name in the
+toplevel build directory.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: http://lkml.kernel.org/r/1371801891-23618-1-git-send-email-bp@alien8.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 6ffe2a0..6218fcb 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -226,6 +226,7 @@ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(boot)
+ 	$(Q)$(MAKE) $(clean)=arch/x86/tools
+ 
++PHONY += kvmconfig
+ kvmconfig:
+ 	$(if $(wildcard $(objtree)/.config),, $(error You need an existing .config for this target))
+ 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m -O $(objtree) $(objtree)/.config arch/x86/configs/kvm_guest.config
+-- 
+2.7.4
+

@@ -1,0 +1,68 @@
+From 2b5f9f965ca3583f5b74d9dd62f4be427a142cde Mon Sep 17 00:00:00 2001
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date: Fri, 13 Mar 2015 15:21:43 +0900
+Subject: [PATCH 24/33] kbuild: add generic mergeconfig target, %.config
+
+"scripts/kconfig/merge_config.sh && make oldconfig" works well
+enough for merging local config fragments, but Kbuild currently has
+the entry points only for "kvmconfig" and "tinyconfig".
+
+This commit provides the generic target for mergeconfig, so we can
+manage our own config fragments easily:
+put "foo.config" in arch/$(SRCARCH)/configs/ or kernel/configs/,
+and then run "make foo.config".
+
+Now "make kvmconfig" is just a shorthand of "make kvm_guest.config".
+Likewise, "make tinyconfig" is equivalent to
+"make allnoconfig tiny.config".
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Josh Triplett <josh@joshtriplett.org>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Michal Marek <mmarek@suse.cz>
+(cherry picked from commit 63a91033d52e64a22e571fe84924c0b7f21c280d)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+(cherry picked from commit 82e071d2cbfe42a2496cdfca7a22b9fa17b9b62f)
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ scripts/kconfig/Makefile | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index d8bd6d4..0550dfd 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -104,21 +104,20 @@ endif
+ %_defconfig: $(obj)/conf
+ 	$(Q)$< --defconfig=arch/$(SRCARCH)/configs/$@ $(Kconfig)
+ 
+-configfiles=$(wildcard $(srctree)/kernel/configs/$(1).config $(srctree)/arch/$(SRCARCH)/configs/$(1).config)
++configfiles=$(wildcard $(srctree)/kernel/configs/$@ $(srctree)/arch/$(SRCARCH)/configs/$@)
+ 
+-define mergeconfig
+-$(if $(call configfiles,$(1)),, $(error No configuration exists for this target on this architecture))
+-$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m .config $(call configfiles,$(1))
+-+$(Q)yes "" | $(MAKE) -f $(srctree)/Makefile oldconfig
+-endef
++%.config: $(obj)/conf
++	$(if $(call configfiles),, $(error No configuration exists for this target on this architecture))
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m .config $(configfiles)
++	+$(Q)yes "" | $(MAKE) -f $(srctree)/Makefile oldconfig
+ 
+ PHONY += kvmconfig
+-kvmconfig:
+-	$(call mergeconfig,kvm_guest)
++kvmconfig: kvm_guest.config
++	@:
+ 
+ PHONY += tinyconfig
+-tinyconfig: allnoconfig
+-	$(call mergeconfig,tiny)
++tinyconfig:
++	$(Q)$(MAKE) -f $(srctree)/Makefile allnoconfig tiny.config
+ 
+ # Help text used by make help
+ help:
+-- 
+2.7.4
+

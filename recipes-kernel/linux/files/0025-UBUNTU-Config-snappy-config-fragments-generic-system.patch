@@ -1,0 +1,187 @@
+From 45a2180f4278dac645e63b363b551c6db18a9d47 Mon Sep 17 00:00:00 2001
+From: Paolo Pisati <paolo.pisati@canonical.com>
+Date: Tue, 27 Jan 2015 14:35:01 +0100
+Subject: [PATCH 25/33] UBUNTU: [Config] snappy config fragments: generic,
+ systemd, lxc, security and snappy
+
+Use the merge_config.sh script to combine the fragments:
+
+ $ ./scripts/kconfig/merge_config.sh arch/x86/configs/YOURCONFIG_defconfig kernel/configs/snappy/*.config
+
+While for an ARM target it would be:
+
+$ ARCH=arm ./scripts/kconfig/merge_config.sh arch/arm/configs/YOURCONFIG_defconfig kernel/configs/snappy/*.config
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ kernel/configs/snappy/generic.config  | 37 +++++++++++++++++++++++++++++++++++
+ kernel/configs/snappy/lxc.config      | 19 ++++++++++++++++++
+ kernel/configs/snappy/security.config | 20 +++++++++++++++++++
+ kernel/configs/snappy/snappy.config   | 18 +++++++++++++++++
+ kernel/configs/snappy/systemd.config  | 32 ++++++++++++++++++++++++++++++
+ 5 files changed, 126 insertions(+)
+ create mode 100644 kernel/configs/snappy/generic.config
+ create mode 100644 kernel/configs/snappy/lxc.config
+ create mode 100644 kernel/configs/snappy/security.config
+ create mode 100644 kernel/configs/snappy/snappy.config
+ create mode 100644 kernel/configs/snappy/systemd.config
+
+diff --git a/kernel/configs/snappy/generic.config b/kernel/configs/snappy/generic.config
+new file mode 100644
+index 0000000..70cfbdd
+--- /dev/null
++++ b/kernel/configs/snappy/generic.config
+@@ -0,0 +1,37 @@
++#LP#1105230 and LP#1385510
++# CONFIG_SOUND_OSS_CORE_PRECLAIM is not set
++# upstart requires DEVTMPFS be enabled and mounted by default.
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# some /dev nodes require POSIX ACLs, like /dev/dsp
++CONFIG_TMPFS_POSIX_ACL=y
++# Ramdisk size should be a minimum of 64M
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_SIZE=65536
++# LVM requires dm_mod built in to activate correctly (LP: #560717)
++CONFIG_MD=y
++CONFIG_BLK_DEV_DM=y
++# sysfs: ensure all DEPRECATED items are off
++# CONFIG_SYSFS_DEPRECATED is not set
++# automatically add local version will cause packaging failure
++CONFIG_LOCALVERSION=""
++# Ensure IPV6 is y, if this is a module we get a module load for
++# every ipv6 packet, bad.
++CONFIG_IPV6=y
++# Ensure ECRYPT_FS is y as it cannot be autoloaded and it has complex
++# dependancies which can pull it =m at a whim.
++CONFIG_ECRYPT_FS=y
++# Required if /init is a shell script.
++CONFIG_BINFMT_SCRIPT=y
++# Newer udevs don't handle firmware loading, and having the userspace
++# fallback enabled in the kernel just results in big delays if we do
++# fall back.
++# See LP:1398458
++# CONFIG_FW_LOADER_USER_HELPER_FALLBACK is not set
++CONFIG_CRASH_DUMP=y
++CONFIG_RTC_DRV_CMOS=m
++CONFIG_NVRAM=m
++CONFIG_INPUT_UINPUT=y
++# needed by dbus
++CONFIG_SYSVIPC=y
++CONFIG_SYSVIPC_SYSCTL=y
+diff --git a/kernel/configs/snappy/lxc.config b/kernel/configs/snappy/lxc.config
+new file mode 100644
+index 0000000..1481286
+--- /dev/null
++++ b/kernel/configs/snappy/lxc.config
+@@ -0,0 +1,19 @@
++# lxc mandated kernel configs - see lxc-checkconfig
++CONFIG_NAMESPACES=y
++CONFIG_UTS_NS=y
++CONFIG_POSIX_MQUEUE=y
++CONFIG_IPC_NS=y
++CONFIG_PID_NS=y
++CONFIG_USER_NS=y
++CONFIG_NET_NS=y
++DEVPTS_MULTIPLE_INSTANCES=y
++CONFIG_CGROUPS=y
++CONFIG_CGROUP_DEVICE=y
++CONFIG_CGROUP_SCHED=y
++CONFIG_CGROUP_CPUACCT=y
++CONFIG_RESOURCE_COUNTERS=y
++CONFIG_MEMCG=y
++CONFIG_CPUSETS=y
++CONFIG_VETH=y
++CONFIG_MACVLAN=y
++CONFIG_VLAN_8021Q=y
+diff --git a/kernel/configs/snappy/security.config b/kernel/configs/snappy/security.config
+new file mode 100644
+index 0000000..4f0452f
+--- /dev/null
++++ b/kernel/configs/snappy/security.config
+@@ -0,0 +1,20 @@
++# CONFIG_COMPAT_BRK is not set
++# CONFIG_DEVKMEM is not set
++CONFIG_LSM_MMAP_MIN_ADDR=0
++CONFIG_SECURITY=y
++CONFIG_SECURITY_APPARMOR=y
++CONFIG_SECURITY_SELINUX=y
++CONFIG_SECURITY_SMACK=y
++CONFIG_SECURITY_YAMA=y
++CONFIG_SYN_COOKIES=y
++CONFIG_DEFAULT_SECURITY_APPARMOR=y
++CONFIG_SECCOMP=y
++CONFIG_SECCOMP_FILTER=y
++CONFIG_CC_STACKPROTECTOR=y
++CONFIG_CC_STACKPROTECTOR_REGULAR=y
++CONFIG_DEBUG_RODATA=y
++CONFIG_DEBUG_SET_MODULE_RONX=y
++CONFIG_STRICT_DEVMEM=y
++# CONFIG_COMPAT_VDSO is not set
++# CONFIG_ACPI_CUSTOM_METHOD is not set
++CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
+diff --git a/kernel/configs/snappy/snappy.config b/kernel/configs/snappy/snappy.config
+new file mode 100644
+index 0000000..687aaf6
+--- /dev/null
++++ b/kernel/configs/snappy/snappy.config
+@@ -0,0 +1,18 @@
++CONFIG_RD_BZIP2=y
++CONFIG_RD_LZMA=y
++CONFIG_RD_XZ=y
++CONFIG_REGULATOR=y
++CONFIG_RFKILL=y
++CONFIG_RFKILL_INPUT=y
++CONFIG_RFKILL_REGULATOR=m
++CONFIG_RFKILL_GPIO=m
++CONFIG_RAW_DRIVER=m
++CONFIG_FANOTIFY=y
++CONFIG_AUTOFS4_FS=y
++# CONFIG_USB_FUNCTIONFS is not set
++# CONFIG_USB_ZERO is not set
++# CONFIG_USB_MASS_STORAGE is not set
++# CONFIG_USB_G_MULTI_CDC is not set
++CONFIG_CONFIGFS_FS=y
++CONFIG_KEYS=y
++CONFIG_ENCRYPTED_KEYS=y
+diff --git a/kernel/configs/snappy/systemd.config b/kernel/configs/snappy/systemd.config
+new file mode 100644
+index 0000000..0e642ba
+--- /dev/null
++++ b/kernel/configs/snappy/systemd.config
+@@ -0,0 +1,32 @@
++# for more info, see REQUIREMENTS in systemd/README:
++CONFIG_DEVTMPFS=y
++CONFIG_CGROUPS=y
++CONFIG_INOTIFY_USER=y
++CONFIG_SIGNALFD=y
++CONFIG_TIMERFD=y
++CONFIG_EPOLL=y
++CONFIG_NET=y
++CONFIG_SYSFS=y
++CONFIG_PROC_FS=y
++CONFIG_FHANDLE=y
++# CONFIG_SYSFS_DEPRECATED is not set
++CONFIG_UEVENT_HELPER_PATH=""
++# CONFIG_FW_LOADER_USER_HELPER is not set
++CONFIG_DMIID=y
++CONFIG_BLK_DEV_BSG=y
++CONFIG_NET_NS=y
++CONFIG_DEVPTS_MULTIPLE_INSTANCES=y
++# Optional but strongly recommended:
++CONFIG_IPV6=y
++CONFIG_AUTOFS4_FS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_TMPFS_XATTR=y
++CONFIG_SECCOMP=y
++CONFIG_CGROUP_SCHED=y
++CONFIG_FAIR_GROUP_SCHED=y
++CONFIG_CFS_BANDWIDTH=y
++CONFIG_SCHEDSTATS=y
++CONFIG_SCHED_DEBUG=y
++CONFIG_EFIVAR_FS=y
++CONFIG_EFI_PARTITION=y
++# CONFIG_AUDIT is not set
+-- 
+2.7.4
+
