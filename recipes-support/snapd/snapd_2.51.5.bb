@@ -34,7 +34,8 @@ DEPENDS += "			\
 	glib-2.0		\
 	udev			\
 	xfsprogs		\
-	libseccomp      \
+	libseccomp		\
+	apparmor		\
 "
 
 RDEPENDS_${PN} += "		\
