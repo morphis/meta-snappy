@@ -5,6 +5,8 @@ Subject: UBUNTU: SAUCE: apparmor: add/use fns to print hash string hex value
 
 Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+
+Cherry-picked from: https://kernel.ubuntu.com/git/ubuntu/ubuntu-focal.git/commit/?id=1a432b8c68588a37adc17e47c14a4251638efb39
 ---
 diff --git a/security/apparmor/crypto.c b/security/apparmor/crypto.c
 index b498ed3..82d56bd 100644

@@ -8,6 +8,8 @@ of tree patch
 
 Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+
+Cherry-picked from: https://kernel.ubuntu.com/git/ubuntu/ubuntu-focal.git/commit/?id=cc8c477bbdf1da04c5af1c06f70d4c971d4df99c
 ---
 diff --git a/security/apparmor/Makefile b/security/apparmor/Makefile
 index ff23fcf..fad407f 100644

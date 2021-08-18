@@ -14,6 +14,8 @@ to work on a newer kernel.
 Signed-off-by: John Johansen <john.johansen@canonical.com>
 [ saf: resolve conflicts when rebasing to 4.20 ]
 Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+
+Cherry-picked from: https://kernel.ubuntu.com/git/ubuntu/ubuntu-focal.git/commit/?id=21d539663dc3abafaa5fddbf69cc5093fd8c48b3
 ---
 diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
 index 45d13b6..c0d5105 100644
