@@ -37,7 +37,7 @@ DEPENDS += "			\
 	libseccomp      \
 "
 
-RDEPENDS_${PN} += "		\
+RDEPENDS:${PN} += "		\
 	ca-certificates		\
 	kernel-module-squashfs	\
 	bash \
@@ -55,18 +55,18 @@ inherit systemd autotools pkgconfig go
 # disable shared runtime for x86
 # https://forum.snapcraft.io/t/yocto-rocko-core-snap-panic/3261
 # GO_DYNLINK is set with arch overrides in goarch.bbclass
-GO_DYNLINK_x86 = ""
-GO_DYNLINK_x86-64 = ""
-GO_DYNLINK_arm = ""
-GO_DYNLINK_aarch64 = ""
+GO_DYNLINK:x86 = ""
+GO_DYNLINK:x86-64 = ""
+GO_DYNLINK:arm = ""
+GO_DYNLINK:aarch64 = ""
 
 # Our tools build with autotools are inside the cmd subdirectory
 # and we need to tell the autotools class to look in there.
 AUTOTOOLS_SCRIPT_PATH = "${S}/cmd"
 
-SYSTEMD_SERVICE_${PN} = "snapd.service"
+SYSTEMD_SERVICE:${PN} = "snapd.service"
 
-do_configure_prepend() {
+do_configure:prepend() {
 	(cd ${S} ; ./mkversion.sh ${PV})
 }
 
@@ -80,6 +80,7 @@ do_configure() {
 }
 
 do_compile() {
+	export GO111MODULE=off
 	go_do_compile
 	# these *must* be built statically
 	for prog in ${STATIC_GO_INSTALL}; do
@@ -143,8 +144,8 @@ do_install() {
 	rm -fv ${D}${libdir}/snapd/snapd.core-fixup.sh
 }
 
-RDEPENDS_${PN} += "squashfs-tools"
-FILES_${PN} += "                                    \
+RDEPENDS:{PN} += "squashfs-tools"
+FILES:${PN} += "                                    \
 	${systemd_unitdir}/system/                        \
 	${systemd_unitdir}/system-generators/             \
 	${systemd_unitdir}/system-environment-generators/	\
