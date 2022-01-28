@@ -7,8 +7,8 @@ SRC_URI = "									\
 	https://${GO_IMPORT}/releases/download/${PV}/snapd_${PV}.vendor.tar.xz	\
 "
 
-SRC_URI[md5sum] = "d6de9d882b3d3b219d637a028b2c2279"
-SRC_URI[sha256sum] = "4f9666cd15d588017d4287aafdb3e7855748509afaa3002e6d149db1424e032f"
+SRC_URI[md5sum] = "0869cf83542632cef3ad721058db890a"
+SRC_URI[sha256sum] = "1e8c9e7c37cb4099d7bc0e877362d4bef2cf8383e56e7431970b99b23a726493"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'apparmor', 'apparmor', '', d)}"
 PACKAGECONFIG[apparmor] = "--enable-apparmor,--disable-apparmor,apparmor,apparmor"
